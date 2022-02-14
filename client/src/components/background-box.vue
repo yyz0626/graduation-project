@@ -1,20 +1,18 @@
 <template>
   <div class="background">
-    <a href="">
-      <img class="img" :src="bgData.bgUrl" />
-      <div class="details">
-        <span class="title" :title="bgData.title">{{ bgData.title }}</span>
-        <span class="introduce"
-          >{{ bgData.author }} · {{ bgData.date }} ·
-          {{ checkTextType(bgData.textType) }}</span
-        >
-      </div>
-    </a>
+    <img class="img" :src="bgData.bgUrl" />
+    <div class="details">
+      <span class="title" :title="bgData.title">{{ bgData.title }}</span>
+      <span class="introduce"
+        >{{ bgData.author }} · {{ bgData.date }} ·
+        {{ checkTextType(bgData.textType) }}</span
+      >
+    </div>
   </div>
 </template>
 
 <script>
-import { checkTextType } from "../lib/config.js";
+import { checkTextType, checkTextTypeByEnglish } from "../lib/config.js";
 export default {
   props: {
     bgData: {
@@ -26,6 +24,9 @@ export default {
   methods: {
     checkTextType(type) {
       return checkTextType(type);
+    },
+    checkTextTypeByEnglish(type) {
+      return checkTextTypeByEnglish(type);
     },
   },
 };

@@ -1,8 +1,11 @@
 <template>
   <div id="app">
     <Header />
-    <div class="container" />
-    <router-view />
+    <div class="top" />
+    <div class="container">
+      <router-view />
+    </div>
+    <div class="bottom" />
   </div>
 </template>
 
@@ -21,7 +24,15 @@ export default {
   margin: 0;
   padding: 0;
 }
+.top {
+  height: 65px;
+}
 .container {
+  width: 100%;
+  text-align: center;
+}
+.bottom {
+  background: #000;
   height: 65px;
 }
 </style>

@@ -17,7 +17,7 @@ const routes = [{
   {
     path: '/entertainment',
     name: 'Entertainment',
-    component: () => import( /* webpackChunkName: "entertainment" */ '../views/navigation-page/entertainment.vue')
+    component: () => import( /* webpackChunkName: "entertainment" */ '../views/navigation-page/entertainment.vue'),
   },
   {
     path: '/friends',
@@ -33,6 +33,16 @@ const routes = [{
     path: '/auction',
     name: 'Auction',
     component: () => import( /* webpackChunkName: "auction" */ '../views/navigation-page/auction.vue')
+  },
+  {
+    path: '/detail',
+    name: 'detail',
+    component: () => import( /* webpackChunkName: "entertainment" */ '../views/detail.vue'),
+  },
+  {
+    path: '*',
+    name: 'notFound',
+    component: () => import( /* webpackChunkName: "entertainment" */ '../views/notFound.vue'),
   }
 ]
 

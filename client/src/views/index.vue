@@ -1,7 +1,9 @@
 <template>
   <div class="container">
     <div v-for="(item, index) in dataList" :key="index" class="list-item">
-      <background-box :bgData="item"></background-box>
+      <router-link :to="{ path: 'detail', query: { postsId: item.postsId } }">
+        <background-box :bgData="item"></background-box>
+      </router-link>
     </div>
   </div>
 </template>
@@ -23,9 +25,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.container {
-  width: 100%;
-  text-align: center;
-}
-</style>
+<style lang="scss" scoped></style>
