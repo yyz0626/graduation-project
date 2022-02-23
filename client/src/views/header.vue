@@ -1,7 +1,7 @@
 <template>
   <div id="navbar">
     <div class="left">
-      <router-link to="/" class="nav-title">黑大社交平台</router-link>
+      <router-link to="/" class="nav-title">校园社交网站</router-link>
       <router-link to="news" class="nav-item">时事新闻</router-link>
       <router-link to="friends" class="nav-item">交友平台</router-link>
       <router-link to="auction" class="nav-item">二手市场</router-link>
