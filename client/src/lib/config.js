@@ -41,8 +41,8 @@ export const dataList = [{
 ]
 export function checkTextType(type) {
     const map = {
-        1: '时事新闻',
-        2: '交友信息',
+        1: '难题解答',
+        2: '交友平台',
         3: '二手市场',
         4: '休闲娱乐'
     }
@@ -50,7 +50,7 @@ export function checkTextType(type) {
 }
 export function checkTextTypeByEnglish(type) {
     const map = {
-        1: 'news',
+        1: 'questions',
         2: 'friends',
         3: 'auction',
         4: 'entertainment'

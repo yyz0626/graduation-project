@@ -25,9 +25,9 @@ const routes = [{
     component: () => import( /* webpackChunkName: "friends" */ '../views/navigation-page/friends.vue')
   },
   {
-    path: '/news',
-    name: 'News',
-    component: () => import( /* webpackChunkName: "news" */ '../views/navigation-page/news.vue')
+    path: '/questions',
+    name: 'Questions',
+    component: () => import( /* webpackChunkName: "news" */ '../views/navigation-page/questions.vue')
   },
   {
     path: '/auction',
@@ -36,13 +36,18 @@ const routes = [{
   },
   {
     path: '/detail',
-    name: 'detail',
-    component: () => import( /* webpackChunkName: "entertainment" */ '../views/detail.vue'),
+    name: 'Detail',
+    component: () => import( /* webpackChunkName: "detail" */ '../views/detail.vue'),
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import( /* webpackChunkName: "login" */ '../views/login.vue'),
   },
   {
     path: '*',
     name: 'notFound',
-    component: () => import( /* webpackChunkName: "entertainment" */ '../views/notFound.vue'),
+    component: () => import( /* webpackChunkName: "*" */ '../views/notFound.vue'),
   }
 ]
 
@@ -51,4 +56,14 @@ const router = new VueRouter({
   routes
 })
 
+
+// router.beforeEach((to, from, next) => {
+//   // 其他页面路径
+//   let token = sessionStorage.getItem('userToken') // 获取用户登录token
+//   if (token === null || token === '') { // 如果token不存在或者为空
+//     next({
+//       path: '/detail'
+//     }) // 则跳转到登录页
+//   }
+// })
 export default router

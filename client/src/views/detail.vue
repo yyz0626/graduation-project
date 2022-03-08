@@ -1,19 +1,19 @@
 <template>
   <div>
-    <div>{{ postsId }}</div>
-    <no-data v-if="!postsId" />
+    <div>{{ d_id }}</div>
+    <!-- <no-data v-if="!postsId" /> -->
   </div>
 </template>
 
 <script>
-import noData from "../components/no-data.vue";
+// import noData from "../components/no-data.vue";
 export default {
   components: {
-    "no-data": noData,
+    // "no-data": noData,
   },
   data() {
     return {
-      postsId: this.$route.query.postsId,
+      d_id: this.$route.query.d_id,
     };
   },
 };
