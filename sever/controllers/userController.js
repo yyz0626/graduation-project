@@ -38,46 +38,48 @@ module.exports = {
             }
         }
     },
-    async regist(ctx) {
-        //1.接受表单数据
+    // 用户注册
+    async userRegist(ctx) {
         let {
-            username,
-            password,
-            nickname
+            u_name,
+            u_pass,
+            u_age,
+            u_gender,
+            u_phone,
+            u_email,
+            status,
         } = ctx.request.body;
-        // 2.安全验证
-        if (username.trim().length == 0) {
+        let results = await model.userRegist({
+            u_name,
+            u_pass,
+            u_age,
+            u_gender,
+            u_phone,
+            u_email,
+            status,
+        })
+        if (results.insertId) {
             ctx.body = {
-                message: "用户名不正确"
-            }
-        } else if (password.length == 0) {
-            ctx.body = {
-                message: "密码格式有误"
+                message: "注册成功"
             }
         }
-        //3.连接数据库
-        else {
-            let user = await model.getUserByUsername(username);
-            if (user.length == 0) {
-                let results = await model.saveUser({
-                    username,
-                    password,
-                    nickname
-                })
-                if (results.insertId) {
-                    ctx.body = {
-                        message: "注册成功"
-                    }
-                } else {}
-                console.log(0);
-            } else {
-                ctx.body = {
-                    message: "用户名存在"
-                }
-            }
-        }
-
     },
+
+    // 用户名重复
+    async checkUserNameRepeat(ctx) {
+        let {
+            u_name,
+        } = ctx.request.body;
+        let results = await model.checkUserNameRepeat(u_name)
+        ctx.body = {
+            userDetails: results
+        }
+    },
+
+
+
+
+
     async getUserId(ctx) {
         let results = await model.getUserId()
         console.log('2222', results);

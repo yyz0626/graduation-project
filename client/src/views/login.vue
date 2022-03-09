@@ -11,177 +11,298 @@
       <p class="title1">正发生</p>
       <p class="title2">立即加入 Campus。</p>
       <div class="btn1">
-        <el-button type="primary" round @click="registFormVisible = true"
-          >使用手机号码或电子邮箱注册</el-button
+        <el-button type="primary" round @click="registVisible = true"
+          >快速注册</el-button
         >
       </div>
       <p class="title3">已有帐号？</p>
       <div class="btn2">
-        <el-button type="primary" round @click="loginFormVisible = true"
+        <el-button type="primary" round @click="loginVisible = true"
           >登录</el-button
         >
       </div>
     </div>
+
     <!-- 注册框 -->
-    <el-dialog title="注册" :visible.sync="registFormVisible">
+    <el-dialog class="dialog regist" :visible.sync="registVisible">
+      <template slot="title" class="title-logo">
+        <img src="../static/login-right-logo.png" alt="" />
+      </template>
+      <p class="dialog-title">注册Campus</p>
       <el-form
-        :model="dynamic"
-        ref="dynamic"
-        label-width="90px"
-        label-position="right"
-        class="demo-dynamic"
+        :model="registForm"
+        status-icon
+        :rules="rules"
+        ref="registForm"
+        label-width="100px"
+        class="demo-registForm"
+        label-position="left"
       >
-        <el-form-item label="动态标题" prop="d_title">
-          <el-input v-model="dynamic.d_title"></el-input>
-        </el-form-item>
-        <el-form-item label="动态类型" prop="d_type">
-          <el-select v-model="dynamic.d_type" placeholder="请选择动态类型">
-            <el-option label="难题解答" value="1"></el-option>
-            <el-option label="交友平台" value="2"></el-option>
-            <el-option label="二手市场" value="3"></el-option>
-            <el-option label="休闲娱乐" value="4"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item
-          label="是否组队"
-          prop="d_group"
-          v-if="dynamic.d_type == 4"
-        >
-          <el-switch v-model="dynamic.d_group"></el-switch>
-        </el-form-item>
-        <el-form-item
-          label="组队人数"
-          prop="d_groupNum"
-          v-if="dynamic.d_type == 4 && dynamic.d_group == true"
-        >
-          <el-input-number
-            v-model="dynamic.d_groupNum"
-            @change="handleChange"
-            :min="0"
-            :max="30"
-            label="描述文字"
-          />
-        </el-form-item>
-        <el-form-item label="动态内容" prop="d_content">
+        <el-form-item label="用户名" prop="u_name">
           <el-input
-            type="textarea"
-            :rows="5"
-            :autosize="{ minRows: 5, maxRows: 8 }"
-            v-model="dynamic.d_content"
-            maxlength="500"
+            v-model="registForm.u_name"
+            maxlength="15"
             show-word-limit
+            @blur="checkUserNameRepeat(registForm.u_name)"
           />
         </el-form-item>
-
-        <el-form-item label="申请置顶" prop="d_topping">
-          <el-switch v-model="dynamic.d_topping" />
+        <el-form-item label="密码" prop="u_pass">
+          <el-input
+            type="password"
+            v-model="registForm.u_pass"
+            autocomplete="off"
+            show-password
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="确认密码" prop="checkPass">
+          <el-input
+            type="password"
+            v-model="registForm.checkPass"
+            autocomplete="off"
+            show-password
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="生日" prop="u_age">
+          <el-date-picker
+            v-model="registForm.u_age"
+            type="date"
+            placeholder="选择日期"
+          />
+        </el-form-item>
+        <el-form-item label="性别" prop="u_gender">
+          <el-radio-group v-model="registForm.u_gender">
+            <el-radio :label="0">男</el-radio>
+            <el-radio :label="1">女</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="联系电话" prop="u_phone">
+          <el-input v-model="registForm.u_phone" />
+        </el-form-item>
+        <el-form-item label="Email" prop="u_email">
+          <el-input v-model="registForm.u_email" />
         </el-form-item>
 
-        <el-form-item>
-          <el-button type="primary" @click="submitForm('dynamic')"
-            >立即发布</el-button
+        <!-- 注册操作栏 -->
+        <el-form-item class="form-operation">
+          <el-button type="primary" @click="submitForm('registForm')"
+            >注册</el-button
           >
-          <el-button @click="resetForm('dynamic')">重置</el-button>
+          <el-button @click="resetForm('registForm')">重置</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
+
     <!-- 登录框 -->
-    <el-dialog title="登录" :visible.sync="loginFormVisible">
-      <el-form
-        :model="dynamic"
-        ref="dynamic"
-        label-width="90px"
-        label-position="right"
-        class="demo-dynamic"
-      >
-        <el-form-item label="动态标题" prop="d_title">
-          <el-input v-model="dynamic.d_title"></el-input>
-        </el-form-item>
-        <el-form-item label="动态类型" prop="d_type">
-          <el-select v-model="dynamic.d_type" placeholder="请选择动态类型">
-            <el-option label="难题解答" value="1"></el-option>
-            <el-option label="交友平台" value="2"></el-option>
-            <el-option label="二手市场" value="3"></el-option>
-            <el-option label="休闲娱乐" value="4"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item
-          label="是否组队"
-          prop="d_group"
-          v-if="dynamic.d_type == 4"
-        >
-          <el-switch v-model="dynamic.d_group"></el-switch>
-        </el-form-item>
-        <el-form-item
-          label="组队人数"
-          prop="d_groupNum"
-          v-if="dynamic.d_type == 4 && dynamic.d_group == true"
-        >
-          <el-input-number
-            v-model="dynamic.d_groupNum"
-            @change="handleChange"
-            :min="0"
-            :max="30"
-            label="描述文字"
-          />
-        </el-form-item>
-        <el-form-item label="动态内容" prop="d_content">
-          <el-input
-            type="textarea"
-            :rows="5"
-            :autosize="{ minRows: 5, maxRows: 8 }"
-            v-model="dynamic.d_content"
-            maxlength="500"
-            show-word-limit
-          />
-        </el-form-item>
-
-        <el-form-item label="申请置顶" prop="d_topping">
-          <el-switch v-model="dynamic.d_topping" />
-        </el-form-item>
-
-        <el-form-item>
-          <el-button type="primary" @click="submitForm('dynamic')"
-            >立即发布</el-button
-          >
-          <el-button @click="resetForm('dynamic')">重置</el-button>
-        </el-form-item>
-      </el-form>
+    <el-dialog class="dialog login" :visible.sync="loginVisible">
+      <template slot="title" class="title-logo">
+        <img src="../static/login-right-logo.png" alt="" />
+      </template>
+      <p class="dialog-title">登录Campus</p>
+      <el-input v-model="loginName" placeholder="请输入用户名" />
+      <el-input placeholder="请输入密码" v-model="loginPwd" show-password />
+      <el-button type="primary" round>登录</el-button>
+      <p class="login-reminder">
+        还没有账号？
+        <el-button type="text" @click="openRegistDialog">注册</el-button>
+      </p>
     </el-dialog>
   </div>
 </template>
 
 <script>
 export default {
+  name: "login",
   data() {
+    // 用户名校验
+    var checkName = async (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error("用户名不能为空"));
+      } else if (value) {
+        if (this.userNameRepeatMsg) {
+          return callback(new Error(this.userNameRepeatMsg));
+        } else {
+          callback();
+        }
+      } else {
+        callback();
+      }
+    };
+    // 密码校验
+    var validatePass = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入密码"));
+      } else {
+        if (this.registForm.checkPass !== "") {
+          this.$refs.registForm.validateField("checkPass");
+        }
+        callback();
+      }
+    };
+    // 二次密码校验
+    var validatePass2 = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请再次输入密码"));
+      } else if (value !== this.registForm.u_pass) {
+        callback(new Error("两次输入密码不一致!"));
+      } else {
+        callback();
+      }
+    };
+    // 生日校验
+    var checkAge = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error("生日不能为空"));
+      } else {
+        callback();
+      }
+    };
+    // 手机号校验
+    var checkPhone = (rule, value, callback) => {
+      const phoneReg = /^1[3|4|5|7|8][0-9]{9}$/;
+      if (!value) {
+        return callback(new Error("电话号码不能为空"));
+      }
+      setTimeout(() => {
+        // Number.isInteger是es6验证数字是否为整数的方法,但是我实际用的时候输入的数字总是识别成字符串
+        // 所以我就在前面加了一个+实现隐式转换
+        if (!Number.isInteger(+value)) {
+          callback(new Error("请输入数字值"));
+        } else {
+          if (phoneReg.test(value)) {
+            callback();
+          } else {
+            callback(new Error("电话号码格式不正确"));
+          }
+        }
+      }, 100);
+    };
+    // 邮箱校验
+    var checkEmail = (rule, value, callback) => {
+      const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
+      if (!value) {
+        return callback(new Error("邮箱不能为空"));
+      }
+      setTimeout(() => {
+        if (mailReg.test(value)) {
+          callback();
+        } else {
+          callback(new Error("请输入正确的邮箱格式"));
+        }
+      }, 100);
+    };
     return {
-      registFormVisible: false,
-      loginFormVisible: false,
-      dynamic: {
-        d_title: "",
-        d_type: "",
-        d_group: false,
-        d_groupNum: 0,
-        d_content: "",
-        d_topping: false,
-      },
-      loginForm: {
-        d_title: "",
-        d_type: "",
-        d_group: false,
-        d_groupNum: 0,
-        d_content: "",
-        d_topping: false,
-      },
+      // 用户名重复提醒
+      userNameRepeatMsg: "",
+      // 对话框显示
+      registVisible: false,
+      loginVisible: false,
+      // 登录表单数据
+      loginName: "",
+      loginPwd: "",
+      // 注册表单数据
       registForm: {
-        d_title: "",
-        d_type: "",
-        d_group: false,
-        d_groupNum: 0,
-        d_content: "",
-        d_topping: false,
+        u_name: "",
+        u_pass: "",
+        checkPass: "",
+        u_age: "",
+        u_gender: 0,
+        u_phone: "",
+        u_email: "",
+      },
+      // 注册表单验证规则
+      rules: {
+        u_name: [{ validator: checkName, trigger: "blur" }],
+        u_pass: [{ validator: validatePass, trigger: "blur" }],
+        checkPass: [{ validator: validatePass2, trigger: "blur" }],
+        u_age: [{ validator: checkAge, trigger: "blur" }],
+        u_phone: [{ validator: checkPhone, trigger: "blur" }],
+        u_email: [{ validator: checkEmail, trigger: "blur" }],
       },
     };
+  },
+  watch: {
+    // 监听登录框显示
+    loginVisible() {
+      this.loginName = "";
+      this.loginPwd = "";
+    },
+    // 监听注册框显示
+    registVisible() {
+      if (this.registVisible == false) this.resetForm("registForm");
+    },
+  },
+  methods: {
+    // 打开注册框
+    openRegistDialog() {
+      this.loginVisible = false;
+      this.registVisible = true;
+    },
+    // 提交注册表单
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.userRegist();
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    // 重置注册表单
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    },
+    // 注册接口
+    userRegist() {
+      let { u_name, u_pass, u_age, u_gender, u_phone, u_email } =
+        this.registForm;
+      let params = {
+        u_name,
+        u_pass,
+        u_age: this.$moment(u_age).format("YYYY-MM-DD"),
+        u_gender,
+        u_phone,
+        u_email,
+        status: 0,
+      };
+      this.$http
+        .post("/user/userRegist", params)
+        .then((res) => {
+          // console.log(res);
+          if (res && res.status == 200) {
+            this.$message({
+              message: "注册成功",
+              type: "success",
+            });
+            setTimeout(() => {
+              this.registVisible = false;
+            }, 3000);
+          } else {
+            this.$message.error("发布失败");
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+          this.$message({
+            message: e,
+            type: "warning",
+          });
+        });
+    },
+    // 用户名重复接口
+    checkUserNameRepeat(u_name) {
+      let params = {
+        u_name,
+      };
+      this.$http.post("/user/checkUserNameRepeat", params).then((res) => {
+        if (res.data.userDetails.length > 0) {
+          this.userNameRepeatMsg = "用户名存在";
+        } else {
+          this.userNameRepeatMsg = "";
+        }
+        this.$refs.registForm.validateField("u_name");
+      });
+    },
   },
 };
 </script>
@@ -192,6 +313,7 @@ export default {
   height: 100vh;
   display: flex;
 }
+
 .left {
   flex: 105;
   position: relative;
@@ -209,11 +331,12 @@ export default {
     z-index: 99;
   }
 }
+
 .right {
   flex: 90;
   display: inline-block;
   padding-left: 50px;
-  padding-top: 50px;
+  padding-top: 40px;
   .right-logo {
     width: 80px;
     height: 80px;
@@ -221,7 +344,7 @@ export default {
   .title1 {
     font-size: 80px;
     font-weight: 900;
-    margin-top: 60px;
+    margin-top: 50px;
   }
   .title2 {
     font-size: 40px;
@@ -263,6 +386,82 @@ export default {
     .el-button--primary:hover {
       background-color: #e8f5fd;
       border-color: #cfd9de;
+    }
+  }
+}
+/deep/ .el-dialog {
+  width: 36%;
+  border-radius: 20px;
+  padding: 0 130px 100px;
+}
+
+/deep/ .el-dialog__header {
+  text-align: center;
+  img {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/deep/ .el-dialog__body {
+  padding: 0;
+}
+
+.test {
+  padding-left: 160px;
+}
+
+.dialog-title {
+  font-size: 24px;
+  font-weight: 900;
+  color: #000;
+}
+
+.login {
+  .login-reminder {
+    margin-top: 50px;
+  }
+  .el-button--primary {
+    margin-top: 30px;
+    color: #fff;
+    background-color: #000;
+    border-color: #000;
+  }
+  .el-button--primary:hover {
+    color: #fff;
+    background-color: #272c30;
+    border-color: #272c30;
+  }
+  /deep/ .el-input {
+    margin-top: 20px;
+  }
+  .el-button--primary {
+    width: 287.08px;
+    font-size: 18px;
+    font-weight: 600;
+  }
+}
+
+.regist {
+  /deep/ .el-dialog {
+    padding: 0 30px 10px !important;
+    margin-top: 35px !important;
+  }
+  /deep/ .el-icon-circle-check {
+    color: rgb(50, 194, 50);
+  }
+  .demo-registForm {
+    margin-top: 20px;
+  }
+  .form-operation {
+    /deep/ .el-form-item__content {
+      margin-left: 0px !important;
+      text-align: center;
+    }
+    /deep/.el-button--primary,
+    .el-button--default {
+      width: 150px !important;
+      border-radius: 20px;
     }
   }
 }
