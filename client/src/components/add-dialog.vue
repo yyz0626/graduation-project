@@ -125,6 +125,7 @@ export default {
         d_type,
         d_content,
         d_fk_uid: 1,
+        d_status: 0,
       };
       this.$http
         .post("/dynamic/publishDynamic", params)
@@ -136,6 +137,9 @@ export default {
               type: "success",
             });
             this.dialogFormVisible = false;
+            setTimeout(() => {
+              this.$router.go(0);
+            }, 1000);
             this.dynamic = {
               d_title: "",
               type: "",

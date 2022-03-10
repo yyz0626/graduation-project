@@ -30,13 +30,15 @@ module.exports = {
             d_title,
             d_type,
             d_content,
-            d_fk_uid
+            d_fk_uid,
+            d_status
         } = ctx.request.body;
         let results = await model.publishDynamic({
             d_title,
             d_type,
             d_content,
-            d_fk_uid
+            d_fk_uid,
+            d_status
         })
         console.log(results);
         if (results.insertId) {
@@ -45,6 +47,49 @@ module.exports = {
             }
         }
     },
+
+    // 根据动态id获取动态信息
+    async getDynamicDetailById(ctx) {
+        let {
+            d_id
+        } = ctx.request.body;
+        let results = await model.getDynamicDetailById(d_id);
+        if (results) {
+            await model.addDynamicViewNum(d_id)
+            ctx.body = {
+                dynamicList: results,
+                length: results.length
+            }
+        }
+    },
+    // 查询动态列表浏览次数前10
+    async getDynamicListByTop10(ctx) {
+        let results = await model.getDynamicListByTop10();
+        ctx.body = {
+            dynamicList: results,
+            length: results.length
+        }
+    },
+
+    // 模糊查询
+    async getDynamicByFuzzy(ctx) {
+        let {
+            string
+        } = ctx.request.body;
+        let results = await model.getDynamicByFuzzy(string);
+        console.log(results);
+        ctx.body = {
+            dynamicList: results,
+            length: results.length
+        }
+    },
+
+
+
+
+
+
+
 
     async getBlogComment(ctx) {
         let blog_id = ctx.query.blogId;

@@ -54,7 +54,7 @@ export default {
   padding: 0;
 }
 .top {
-  margin-top: 65px;
+  margin-top: 85px;
 }
 .bottom {
   position: relative;

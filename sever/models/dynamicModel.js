@@ -16,6 +16,29 @@ module.exports = {
         return db.query("insert into dynamic set ?", dynamic);
     },
 
+    // 根据动态id获取动态信息
+    getDynamicDetailById(d_id) {
+        return db.query("select * from dynamic where d_id = ?", [d_id]);
+    },
+
+    // 动态查看次数+1
+    addDynamicViewNum(d_id) {
+        console.log('id:', d_id);
+        return db.query("update dynamic set count = count + 1 where d_id = ?", [d_id]);
+    },
+
+    // 查询动态列表浏览次数前10
+    getDynamicListByTop10() {
+        return db.query("SELECT * FROM dynamic ORDER BY count DESC limit 5");
+    },
+
+    // 模糊查询
+    getDynamicByFuzzy(query) {
+        let dbStr = `SELECT * FROM dynamic WHERE d_title like '%${query}%'`
+        console.log(dbStr);
+        return db.query(dbStr);
+    },
+
 
     // getUserByNamePwd(username, password) {
     //     return db.query("select * from t_user where username=? and password=?", [username, password]);
