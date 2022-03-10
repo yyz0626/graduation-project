@@ -30,7 +30,7 @@
               src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
             />
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item icon="el-icon-user" command="userinfo"
+              <el-dropdown-item icon="el-icon-user" command="person"
                 >个人资料</el-dropdown-item
               >
               <el-dropdown-item icon="el-icon-close" command="logout"
@@ -70,11 +70,11 @@ export default {
       return localStorage.getItem("token");
     },
     userInfo() {
-      return localStorage.getItem("userInfo");
+      return JSON.parse(localStorage.getItem("userInfo"));
     },
   },
   mounted() {
-    console.log(this.$store.state);
+    // console.log(this.$store.state);
   },
   methods: {
     handleCommand(command) {
@@ -87,6 +87,13 @@ export default {
         setTimeout(() => {
           this.$router.go(0);
         }, 500);
+      }
+      // 跳转个人信息页
+      if (command == "person") {
+        this.$router.push({
+          path: "/person",
+          query: { u_id: this.userInfo.u_id },
+        });
       }
     },
   },
