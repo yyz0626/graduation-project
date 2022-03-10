@@ -98,14 +98,20 @@
         <img src="../static/login-right-logo.png" alt="" />
       </template>
       <p class="dialog-title">登录Campus</p>
-      <el-input v-model="loginName" placeholder="请输入用户名" />
+      <el-input v-model="loginTel" placeholder="请输入手机号码" />
       <el-input placeholder="请输入密码" v-model="loginPwd" show-password />
-      <el-button type="primary" round>登录</el-button>
+      <el-button type="primary" round @click="userLogin">登录</el-button>
       <p class="login-reminder">
         还没有账号？
         <el-button type="text" @click="openRegistDialog">注册</el-button>
       </p>
     </el-dialog>
+
+    <div class="return">
+      <router-link to="/" class="nav-title">
+        <img src="../static/return.png" alt="" />
+      </router-link>
+    </div>
   </div>
 </template>
 
@@ -191,13 +197,14 @@ export default {
       }, 100);
     };
     return {
+      verificationCodeStatus: false,
       // 用户名重复提醒
       userNameRepeatMsg: "",
       // 对话框显示
       registVisible: false,
       loginVisible: false,
       // 登录表单数据
-      loginName: "",
+      loginTel: "",
       loginPwd: "",
       // 注册表单数据
       registForm: {
@@ -223,7 +230,7 @@ export default {
   watch: {
     // 监听登录框显示
     loginVisible() {
-      this.loginName = "";
+      this.loginTel = "";
       this.loginPwd = "";
     },
     // 监听注册框显示
@@ -232,7 +239,7 @@ export default {
     },
   },
   methods: {
-    // 打开注册框
+    // 登录框中打开注册框
     openRegistDialog() {
       this.loginVisible = false;
       this.registVisible = true;
@@ -252,7 +259,7 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
-    // 注册接口
+    // 用户注册接口
     userRegist() {
       let { u_name, u_pass, u_age, u_gender, u_phone, u_email } =
         this.registForm;
@@ -302,6 +309,56 @@ export default {
         }
         this.$refs.registForm.validateField("u_name");
       });
+    },
+    // 用户登录接口
+    userLogin() {
+      if (!this.loginTel) {
+        this.$message({
+          message: "请输入手机号码",
+          type: "warning",
+        });
+        return;
+      }
+      if (!this.loginPwd) {
+        this.$message({
+          message: "请输入密码",
+          type: "warning",
+        });
+        return;
+      }
+      let params = {
+        u_phone: this.loginTel,
+        u_pass: this.loginPwd,
+      };
+      this.$http
+        .post("/user/userLogin", params)
+        .then((res) => {
+          // console.log(res);
+          if (res && res.status == 200 && res.data.userInfo.length > 0) {
+            let { token, userInfo } = res.data;
+            //存token
+            this.$store.dispatch("SET_TOKEN", token);
+            this.$store.dispatch("SET_USERINFO", JSON.stringify(userInfo[0]));
+            this.$router.push("/");
+            this.$message({
+              message: "登录成功",
+              type: "success",
+            });
+            setTimeout(() => {
+              this.registVisible = false;
+            }, 3000);
+          } else {
+            this.$message.error("登录失败,请重试");
+            this.loginTel = "";
+            this.loginPwd = "";
+          }
+        })
+        .catch((e) => {
+          this.$message({
+            message: e,
+            type: "warning",
+          });
+        });
     },
   },
 };
@@ -418,9 +475,12 @@ export default {
 }
 
 .login {
-  .login-reminder {
-    margin-top: 50px;
+  /deep/ .el-dialog {
+    padding-bottom: 20px !important;
   }
+  // .login-reminder {
+  //   margin-top: 50px;
+  // }
   .el-button--primary {
     margin-top: 30px;
     color: #fff;
@@ -444,15 +504,21 @@ export default {
 
 .regist {
   /deep/ .el-dialog {
-    padding: 0 30px 10px !important;
     margin-top: 35px !important;
   }
+
+  /deep/ .el-dialog {
+    padding: 0 30px 10px !important;
+  }
+
   /deep/ .el-icon-circle-check {
     color: rgb(50, 194, 50);
   }
+
   .demo-registForm {
     margin-top: 20px;
   }
+
   .form-operation {
     /deep/ .el-form-item__content {
       margin-left: 0px !important;
@@ -463,6 +529,23 @@ export default {
       width: 150px !important;
       border-radius: 20px;
     }
+  }
+}
+
+.return {
+  position: fixed;
+
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  a {
+    text-decoration: none;
+    color: #1a8cdb;
+  }
+  img {
+    width: 100%;
+    height: 100%;
   }
 }
 </style>

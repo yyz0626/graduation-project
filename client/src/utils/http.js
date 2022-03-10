@@ -6,16 +6,16 @@ const instance = axios.create({
 });
 
 //添加请求拦截器
-// instance.interceptors.request.use(
-//     function (config) {
-//         let token = localStorage.getItem('mytoken');
-//         config.headers['Authorization'] = "Bearer " + token;
-//         return config;
-//     },
-//     function (error) {
-//         return Promise.reject(error);
-//     }
-// )
+instance.interceptors.request.use(
+    function (config) {
+        let token = localStorage.getItem('mytoken');
+        config.headers['Authorization'] = "Bearer " + token;
+        return config;
+    },
+    function (error) {
+        return Promise.reject(error);
+    }
+)
 
 
 //添加响应拦截器

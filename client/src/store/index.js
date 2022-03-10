@@ -6,29 +6,48 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     token: '',
-    uname: '',
-    uid: ''
+    userInfo: '',
   },
-  mutations: {},
+  mutations: {
+    SET_TOKEN: (state, token) => {
+      state.token = token
+    },
+    SET_USERINFO: (state, userInfo) => {
+      state.userInfo = userInfo
+    },
+    OUT_TOKEN: (state) => {
+      state.token = '='
+    },
+    OUT_USERINFO: (state) => {
+      state.userInfo = '='
+    },
+  },
   actions: {
-    setToken: (state, token) => {
-      state.token = token;
-      localStorage.setItem('mytoken', token)
+    // 登录
+    SET_TOKEN: ({
+      commit
+    }, token) => {
+      localStorage.setItem('token', token)
+      commit('SET_TOKEN', token)
     },
-    logout: state => {
-      state.token = null;
-      state.uname = null;
-      localStorage.removeItem('mytoken');
-      localStorage.removeItem('myname');
-      localStorage.removeItem('myid');
+
+    // 用户信息
+    SET_USERINFO: ({
+      commit
+    }, userInfo) => {
+      localStorage.setItem('userInfo', userInfo)
+      commit('SET_USERINFO', userInfo)
     },
-    setName: (state, uname) => {
-      state.uname = uname;
-      localStorage.setItem('myname', uname)
-    },
-    setId: (state, uid) => {
-      state.uid = uid;
-      localStorage.setItem('myid', uid)
+
+
+    // 登出
+    LOG_OUT: ({
+      commit
+    }) => {
+      localStorage.removeItem('token')
+      localStorage.removeItem('userInfo')
+      commit('OUT_TOKEN')
+      commit('OUT_USERINFO')
     },
   },
   modules: {}

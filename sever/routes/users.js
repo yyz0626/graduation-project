@@ -14,7 +14,14 @@ router.post('/userRegist', controller.userRegist)
 // 用户名重复
 router.post('/checkUserNameRepeat', controller.checkUserNameRepeat)
 
-router.post('/login', controller.login)
+// 用户登录
+router.post('/userLogin', controller.userLogin)
+
+
+
+
+
+
 
 //测试接口
 router.get('/getUserId', controller.getUserId)

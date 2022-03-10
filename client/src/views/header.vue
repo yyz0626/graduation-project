@@ -6,13 +6,40 @@
       mode="horizontal"
       style="width: 100%"
     >
+      <!-- 标题 -->
       <div class="nav-title">
-        <router-link to="/" class="nav-title">校园社交网站</router-link>
+        <router-link to="/" class="nav-title">校园社交网 </router-link>
       </div>
+      <!-- 导航栏 -->
       <el-menu-item v-for="(item, i) in navList" :key="i" :index="item.name">
         {{ item.navItem }}
       </el-menu-item>
-      <search-box style="margin-left: 80px" />
+
+      <!-- 搜索框 -->
+      <search-box style="margin-left: 140px" />
+
+      <div class="loginBox">
+        <div v-if="!token" class="login-title">
+          <router-link to="/login">登录 | 注册</router-link>
+        </div>
+        <div class="avator" v-else>
+          <el-dropdown trigger="click" @command="handleCommand">
+            <el-avatar
+              :size="50"
+              title="个人"
+              src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+            />
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item icon="el-icon-user" command="userinfo"
+                >个人资料</el-dropdown-item
+              >
+              <el-dropdown-item icon="el-icon-close" command="logout"
+                >退出</el-dropdown-item
+              >
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
+      </div>
     </el-menu>
   </div>
 </template>
@@ -34,10 +61,34 @@ export default {
         { name: "/auction", navItem: "个人中心" },
         { name: "/entertainment", navItem: "休闲娱乐" },
       ],
+      circleUrl:
+        "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
     };
   },
+  computed: {
+    token() {
+      return localStorage.getItem("token");
+    },
+    userInfo() {
+      return localStorage.getItem("userInfo");
+    },
+  },
+  mounted() {
+    console.log(this.$store.state);
+  },
   methods: {
-    searchTab() {},
+    handleCommand(command) {
+      if (command == "logout") {
+        this.$store.dispatch("LOG_OUT");
+        this.$message({
+          message: "退出成功",
+          type: "success",
+        });
+        setTimeout(() => {
+          this.$router.go(0);
+        }, 500);
+      }
+    },
   },
 };
 </script>
@@ -58,47 +109,43 @@ export default {
 }
 .nav-title {
   float: left;
-  margin-left: 80px;
+  margin-left: 90px;
   margin-right: 10px;
   font-size: 30px;
   font-weight: 700;
   text-decoration: none;
-  // color: #fff;
+  color: #409eff;
 }
-#navbar {
-  width: 100%;
-  height: 85px;
-  display: flex;
-  position: fixed;
-  top: 0;
-  align-items: center;
-  padding: 0 30px 0 0;
-  box-sizing: border-box;
-  background-image: linear-gradient(#083252, #4f7fa3, #e2e8ec);
-  text-align: center;
+
+.loginBox {
+  float: right;
+  margin-right: 140px;
+}
+.login-title {
   a {
     text-decoration: none;
-    color: #fff;
+    color: #909399;
+    font-size: 20px;
   }
 }
-.left {
-  flex: 7;
+.avator {
+  margin-top: 15px;
+}
 
-  .nav-item {
-    margin-right: 10px;
-  }
-  .nav-item:hover {
-    color: rgb(114, 111, 111) !important;
-  }
+.el-dropdown-link {
+  cursor: pointer;
+  color: #409eff;
 }
-.mid {
-  flex: 4;
-  /deep/ .el-input__inner {
-    width: 200px;
-    border-radius: 111px;
-  }
+.el-icon-arrow-down {
+  font-size: 12px;
 }
-.right {
-  flex: 1;
+.demonstration {
+  display: block;
+  color: #8492a6;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+.el-dropdown-menu {
+  top: 60px !important;
 }
 </style>
