@@ -37,7 +37,7 @@ const routes = [{
   {
     path: '/detail',
     name: 'Detail',
-    component: () => import( /* webpackChunkName: "detail" */ '../views/detail.vue'),
+    component: () => import( /* webpackChunkName: "detail" */ '../views/detail-pages/detail.vue'),
   },
   {
     path: '/login',
@@ -45,9 +45,14 @@ const routes = [{
     component: () => import( /* webpackChunkName: "login" */ '../views/login.vue'),
   },
   {
-    path: '/person',
-    name: 'Person',
-    component: () => import( /* webpackChunkName: "person" */ '../views/personal.vue'),
+    path: '/personal',
+    name: 'Personal',
+    component: () => import( /* webpackChunkName: "personal" */ '../views/detail-pages/personal.vue'),
+  },
+  {
+    path: '/personalDynamic',
+    name: 'PersonalDynamic',
+    component: () => import( /* webpackChunkName: "PersonalDynamic" */ '../views/detail-pages/personal-dynamic.vue'),
   },
   {
     path: '*',

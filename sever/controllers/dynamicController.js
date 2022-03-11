@@ -54,7 +54,7 @@ module.exports = {
             d_id
         } = ctx.request.body;
         let results = await model.getDynamicDetailById(d_id);
-        if (results) {
+        if (results.length > 0) {
             await model.addDynamicViewNum(d_id)
             ctx.body = {
                 dynamicList: results,
@@ -62,6 +62,7 @@ module.exports = {
             }
         }
     },
+
     // 查询动态列表浏览次数前10
     async getDynamicListByTop10(ctx) {
         let results = await model.getDynamicListByTop10();

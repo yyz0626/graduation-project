@@ -4,13 +4,15 @@ const {
 } = require('../auth')
 
 module.exports = {
+    // 用户登录
     async userLogin(ctx) {
         let {
             u_phone,
             u_pass,
         } = ctx.request.body;
         let results = await model.userLogin(u_phone, u_pass);
-        if (results) {
+        console.log(results);
+        if (results.length > 0) {
             let u_id = results[0].u_id
             let payload = {
                 u_id: u_id,
@@ -20,6 +22,10 @@ module.exports = {
             ctx.body = {
                 userInfo: results,
                 token: token
+            }
+        } else {
+            ctx.body = {
+                userInfo: results,
             }
         }
         // } else {
@@ -65,7 +71,37 @@ module.exports = {
         }
     },
 
+    // 根据用户id获取用户信息
+    async getUserInfoById(ctx) {
+        let {
+            u_id
+        } = ctx.request.body;
+        let results = await model.getUserInfoById(u_id);
+        if (results.length > 0) {
+            ctx.body = {
+                userInfo: results,
+            }
+        }
+    },
 
+    // 更新用户信息
+    async updateUserInfo(ctx) {
+        let {
+            u_age,
+            u_name,
+            u_email,
+            u_hobby,
+            u_id,
+            u_avatar
+        } = ctx.request.body;
+        let results = await model.updateUserInfo(u_age, u_name, u_email, u_hobby, u_id, u_avatar);
+        // console.log(results.insertId);
+        if (results.insertId >= 0) {
+            ctx.body = {
+                userInfo: results,
+            }
+        }
+    },
 
 
 

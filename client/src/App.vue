@@ -11,7 +11,7 @@
       <router-view />
     </div>
     <!-- 底部 -->
-    <div class="bottom" v-if="!isLogin" />
+    <div class="bottom" v-if="!isLogin && !isPersonal" />
     <!-- 回到顶部 -->
     <el-backtop :bottom="60" v-if="!isLogin" />
   </div>
@@ -30,6 +30,7 @@ export default {
   data() {
     return {
       isLogin: false,
+      isPersonal: false,
     };
   },
   watch: {
@@ -41,6 +42,12 @@ export default {
         } else {
           this.isLogin = false;
         }
+        if (route.path == "/personal") {
+          this.isPersonal = true;
+        } else {
+          this.isPersonal = false;
+        }
+        console.log(this.isPersonal);
       },
       immediate: true,
     },

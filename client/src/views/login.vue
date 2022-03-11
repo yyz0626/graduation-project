@@ -348,7 +348,7 @@ export default {
               this.registVisible = false;
             }, 3000);
           } else {
-            this.$message.error("登录失败,请重试");
+            this.$message.error("密码错误,请重试！");
             this.loginTel = "";
             this.loginPwd = "";
           }

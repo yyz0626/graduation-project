@@ -49,6 +49,14 @@ export default new Vuex.Store({
       commit('OUT_TOKEN')
       commit('OUT_USERINFO')
     },
+
+    // 更新个人信息
+    UPDATE_USERINFO: ({
+      commit
+    }) => {
+      localStorage.removeItem('userInfo')
+      commit('OUT_USERINFO')
+    },
   },
   modules: {}
 })

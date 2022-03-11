@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <div class="detail">
+      d_detail:
       <pre>{{ d_detail }}</pre>
     </div>
 

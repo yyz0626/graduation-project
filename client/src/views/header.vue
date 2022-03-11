@@ -22,16 +22,15 @@
         <div v-if="!token" class="login-title">
           <router-link to="/login">登录 | 注册</router-link>
         </div>
-        <div class="avator" v-else>
+        <div class="avatar" v-else>
           <el-dropdown trigger="click" @command="handleCommand">
-            <el-avatar
-              :size="50"
-              title="个人"
-              src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-            />
+            <el-avatar :size="50" title="个人" :src="avatarUrl" />
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item icon="el-icon-user" command="person"
+              <el-dropdown-item icon="el-icon-user" command="personal"
                 >个人资料</el-dropdown-item
+              >
+              <el-dropdown-item icon="el-icon-chat-line-round" command="dynamic"
+                >我的动态</el-dropdown-item
               >
               <el-dropdown-item icon="el-icon-close" command="logout"
                 >退出</el-dropdown-item
@@ -58,11 +57,10 @@ export default {
       navList: [
         { name: "/questions", navItem: "难题解答" },
         { name: "/friends", navItem: "交友平台" },
-        { name: "/auction", navItem: "个人中心" },
+        { name: "/auction", navItem: "二手平台" },
         { name: "/entertainment", navItem: "休闲娱乐" },
       ],
-      circleUrl:
-        "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
+      avatarUrl: "",
     };
   },
   computed: {
@@ -71,6 +69,20 @@ export default {
     },
     userInfo() {
       return JSON.parse(localStorage.getItem("userInfo"));
+    },
+  },
+  watch: {
+    userInfo: {
+      handler() {
+        if (this.userInfo.u_avatar) {
+          this.avatarUrl = this.userInfo.u_avatar;
+        } else {
+          this.avatarUrl =
+            "https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png";
+        }
+      },
+      deep: true,
+      immediate: true,
     },
   },
   mounted() {
@@ -85,13 +97,21 @@ export default {
           type: "success",
         });
         setTimeout(() => {
+          this.$router.push({ path: "/" });
           this.$router.go(0);
         }, 500);
       }
       // 跳转个人信息页
-      if (command == "person") {
+      if (command == "personal") {
         this.$router.push({
-          path: "/person",
+          path: "/personal",
+          query: { u_id: this.userInfo.u_id },
+        });
+      }
+      // 跳转个人动态页
+      if (command == "dynamic") {
+        this.$router.push({
+          path: "/personalDynamic",
           query: { u_id: this.userInfo.u_id },
         });
       }
@@ -135,7 +155,7 @@ export default {
     font-size: 20px;
   }
 }
-.avator {
+.avatar {
   margin-top: 15px;
 }
 
