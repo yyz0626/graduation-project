@@ -30,15 +30,15 @@ module.exports = {
             d_title,
             d_type,
             d_content,
-            d_fk_uid,
-            d_status
+            d_fk_uId,
+            d_pictures
         } = ctx.request.body;
         let results = await model.publishDynamic({
             d_title,
             d_type,
             d_content,
-            d_fk_uid,
-            d_status
+            d_fk_uId,
+            d_pictures
         })
         console.log(results);
         if (results.insertId) {

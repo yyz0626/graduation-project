@@ -15,9 +15,16 @@
       {{ d_detail.d_content }}
     </div>
 
+    <div class="pic">
+      <div v-for="(item, index) in picList" :key="index">
+        <img :src="item" alt="" />
+      </div>
+    </div>
+
     <!-- <div class="edit-time" v-if="d_detail.updateTime">
       最后编辑于：{{ $moment(d_detail.updateTime).format("lll") }}
     </div> -->
+
     <!-- 快进 -->
     <div class="fast-forward">
       <div class="last-dynamic">
@@ -73,6 +80,7 @@ export default {
       content_val: "",
       last_dynamic: "",
       next_dynamic: "",
+      picList: "",
     };
   },
   created() {
@@ -88,10 +96,10 @@ export default {
         .post("/dynamic/getDynamicDetailById", params)
         .then((res) => {
           if (res && res.status == 200 && res.data) {
-            console.log(res.data);
             this.d_detail = res.data.dynamicList[0];
             this.last_dynamic = res.data.lastDynamic[0];
             this.next_dynamic = res.data.nextDynamic[0];
+            this.picList = this.d_detail.d_pictures.split(",");
           }
         })
         .catch((e) => {
@@ -128,11 +136,12 @@ export default {
   line-height: 30px;
   font-size: 18px;
 }
-.edit-time {
-  margin-top: 20px;
-  margin-left: 560px;
-  color: #9da3a8;
+
+.pic {
+  margin-top: 10px;
+  text-align: center;
 }
+
 .fast-forward {
   height: 120px;
   display: flex;

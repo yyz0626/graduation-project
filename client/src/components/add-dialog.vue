@@ -58,10 +58,19 @@
             show-word-limit
           />
         </el-form-item>
-
-        <!-- <el-form-item label="申请置顶" prop="d_topping">
-          <el-switch v-model="dynamic.d_topping" />
-        </el-form-item> -->
+        <el-form-item label="动态图片">
+          <el-upload
+            class="upload-demo"
+            :action="domain"
+            :http-request="upqiniu"
+            :before-upload="beforeUpload"
+            :file-list="picList"
+            :on-remove="handleRemove"
+            list-type="picture"
+          >
+            <el-button size="small" type="primary">点击上传</el-button>
+          </el-upload>
+        </el-form-item>
 
         <el-form-item>
           <el-button type="primary" @click="submitForm('dynamic')"
@@ -116,18 +125,26 @@ export default {
         d_type: [{ validator: checkType, trigger: "change" }],
         d_content: [{ validator: checkContent, trigger: "blur" }],
       },
+      // 七牛云的上传地址，根据自己所在地区选择，我这里是华东区
+      domain: "https://upload-z2.qiniup.com",
+      // 这是七牛云空间的外链默认域名
+      qiniuaddr: "r8jcjikss.hn-bkt.clouddn.com",
+      picList: [],
     };
   },
   methods: {
     // 发布动态
     publishDynamic() {
       let { d_title, d_type, d_content } = this.dynamic;
+      let picList = this.picList.map((item) => {
+        return item.url;
+      });
       let params = {
         d_title,
         d_type,
         d_content,
-        d_fk_uid: 1,
-        d_status: 0,
+        d_fk_uId: 1,
+        d_pictures: picList.toString(),
       };
       this.$http
         .post("/dynamic/publishDynamic", params)
@@ -177,6 +194,58 @@ export default {
     // 重置表单
     resetForm(formName) {
       this.$refs[formName].resetFields();
+    },
+
+    // 上传文件到七牛云
+    upqiniu(req) {
+      const config = {
+        headers: { "Content-Type": "multipart/form-data" },
+      };
+      let filetype = "";
+      if (req.file.type === "image/png") {
+        filetype = "png";
+      } else {
+        filetype = "jpg";
+      }
+      // 重命名要上传的文件
+      const keyname =
+        "yyz" + "-" + req.file.name.split(".")[0] + "." + filetype;
+      // 从后端获取上传凭证token
+      this.$http.get("/user/getQiNiuToken").then((res) => {
+        const formdata = new FormData();
+        formdata.append("file", req.file);
+        formdata.append("token", res.data.uploadToken);
+        formdata.append("key", keyname);
+        // 获取到凭证之后再将文件上传到七牛云空间
+        this.$http.post(this.domain, formdata, config).then((res) => {
+          let obj = {
+            name: keyname,
+            url: "http://" + this.qiniuaddr + "/" + res.data.key,
+          };
+          this.picList.push(obj);
+        });
+      });
+    },
+    // 验证文件合法性
+    beforeUpload(file) {
+      const isJPG = file.type === "image/jpeg" || file.type === "image/png";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+      if (!isJPG) {
+        this.$message.error("上传图片只能是 JPG/PNG 格式!");
+      }
+      if (!isLt2M) {
+        this.$message.error("上传图片大小不能超过 2MB!");
+      }
+      return isJPG && isLt2M;
+    },
+
+    // 删除照片
+    handleRemove(file) {
+      this.picList.find((item, index) => {
+        if (file.uid == item.uid) {
+          this.picList.splice(index, 1);
+        }
+      });
     },
   },
 };
