@@ -15,9 +15,9 @@
       {{ d_detail.d_content }}
     </div>
 
-    <div class="edit-time" v-if="d_detail.updateTime">
+    <!-- <div class="edit-time" v-if="d_detail.updateTime">
       最后编辑于：{{ $moment(d_detail.updateTime).format("lll") }}
-    </div>
+    </div> -->
     <!-- 快进 -->
     <div class="fast-forward">
       <div class="last-dynamic">

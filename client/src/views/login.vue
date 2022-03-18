@@ -43,7 +43,6 @@
             v-model="registForm.u_name"
             maxlength="15"
             show-word-limit
-            @blur="checkUserNameRepeat(registForm.u_name)"
           />
         </el-form-item>
         <el-form-item label="密码" prop="u_pass">
@@ -62,24 +61,11 @@
             show-password
           ></el-input>
         </el-form-item>
-        <el-form-item label="生日" prop="u_age">
-          <el-date-picker
-            v-model="registForm.u_age"
-            type="date"
-            placeholder="选择日期"
+        <el-form-item label="联系电话" prop="u_tel">
+          <el-input
+            v-model="registForm.u_tel"
+            @blur="checkTelRepeat(registForm.u_tel)"
           />
-        </el-form-item>
-        <el-form-item label="性别" prop="u_gender">
-          <el-radio-group v-model="registForm.u_gender">
-            <el-radio :label="0">男</el-radio>
-            <el-radio :label="1">女</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="联系电话" prop="u_phone">
-          <el-input v-model="registForm.u_phone" />
-        </el-form-item>
-        <el-form-item label="Email" prop="u_email">
-          <el-input v-model="registForm.u_email" />
         </el-form-item>
 
         <!-- 注册操作栏 -->
@@ -98,8 +84,12 @@
         <img src="../static/login-right-logo.png" alt="" />
       </template>
       <p class="dialog-title">登录Campus</p>
-      <el-input v-model="loginTel" placeholder="请输入手机号码" />
-      <el-input placeholder="请输入密码" v-model="loginPwd" show-password />
+      <el-input v-model="loginForm.u_tel" placeholder="请输入手机号码" />
+      <el-input
+        placeholder="请输入密码"
+        v-model="loginForm.u_pass"
+        show-password
+      />
       <el-button type="primary" round @click="userLogin">登录</el-button>
       <p class="login-reminder">
         还没有账号？
@@ -123,12 +113,6 @@ export default {
     var checkName = async (rule, value, callback) => {
       if (!value) {
         return callback(new Error("用户名不能为空"));
-      } else if (value) {
-        if (this.userNameRepeatMsg) {
-          return callback(new Error(this.userNameRepeatMsg));
-        } else {
-          callback();
-        }
       } else {
         callback();
       }
@@ -154,14 +138,6 @@ export default {
         callback();
       }
     };
-    // 生日校验
-    var checkAge = (rule, value, callback) => {
-      if (!value) {
-        return callback(new Error("生日不能为空"));
-      } else {
-        callback();
-      }
-    };
     // 手机号校验
     var checkPhone = (rule, value, callback) => {
       const phoneReg = /^1[3|4|5|7|8][0-9]{9}$/;
@@ -173,6 +149,12 @@ export default {
         // 所以我就在前面加了一个+实现隐式转换
         if (!Number.isInteger(+value)) {
           callback(new Error("请输入数字值"));
+        } else if (value) {
+          if (this.userTelRepeatMsg) {
+            return callback(new Error(this.userTelRepeatMsg));
+          } else {
+            callback();
+          }
         } else {
           if (phoneReg.test(value)) {
             callback();
@@ -182,56 +164,41 @@ export default {
         }
       }, 100);
     };
-    // 邮箱校验
-    var checkEmail = (rule, value, callback) => {
-      const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
-      if (!value) {
-        return callback(new Error("邮箱不能为空"));
-      }
-      setTimeout(() => {
-        if (mailReg.test(value)) {
-          callback();
-        } else {
-          callback(new Error("请输入正确的邮箱格式"));
-        }
-      }, 100);
-    };
     return {
       verificationCodeStatus: false,
       // 用户名重复提醒
-      userNameRepeatMsg: "",
+      userTelRepeatMsg: "",
       // 对话框显示
       registVisible: false,
       loginVisible: false,
       // 登录表单数据
-      loginTel: "",
-      loginPwd: "",
+      loginForm: {
+        u_tel: "",
+        u_pass: "",
+      },
       // 注册表单数据
       registForm: {
         u_name: "",
         u_pass: "",
         checkPass: "",
-        u_age: "",
-        u_gender: 0,
-        u_phone: "",
-        u_email: "",
+        u_tel: "",
       },
       // 注册表单验证规则
       rules: {
         u_name: [{ validator: checkName, trigger: "blur" }],
         u_pass: [{ validator: validatePass, trigger: "blur" }],
         checkPass: [{ validator: validatePass2, trigger: "blur" }],
-        u_age: [{ validator: checkAge, trigger: "blur" }],
-        u_phone: [{ validator: checkPhone, trigger: "blur" }],
-        u_email: [{ validator: checkEmail, trigger: "blur" }],
+        u_tel: [{ validator: checkPhone, trigger: "blur" }],
       },
     };
   },
   watch: {
     // 监听登录框显示
     loginVisible() {
-      this.loginTel = "";
-      this.loginPwd = "";
+      this.loginForm = {
+        u_tel: "",
+        u_pass: "",
+      };
     },
     // 监听注册框显示
     registVisible() {
@@ -261,16 +228,11 @@ export default {
     },
     // 用户注册接口
     userRegist() {
-      let { u_name, u_pass, u_age, u_gender, u_phone, u_email } =
-        this.registForm;
+      let { u_name, u_pass, u_tel } = this.registForm;
       let params = {
         u_name,
         u_pass,
-        u_age: this.$moment(u_age).format("YYYY-MM-DD"),
-        u_gender,
-        u_phone,
-        u_email,
-        status: 0,
+        u_tel,
       };
       this.$http
         .post("/user/userRegist", params)
@@ -296,42 +258,39 @@ export default {
           });
         });
     },
-    // 用户名重复接口
-    checkUserNameRepeat(u_name) {
+    // 用户电话重复接口
+    checkTelRepeat(u_tel) {
       let params = {
-        u_name,
+        u_tel,
       };
-      this.$http.post("/user/checkUserNameRepeat", params).then((res) => {
+      this.$http.post("/user/checkTelRepeat", params).then((res) => {
+        console.log(res);
         if (res.data.userDetails.length > 0) {
-          this.userNameRepeatMsg = "用户名存在";
+          this.userTelRepeatMsg = "该电话号码已注册";
         } else {
-          this.userNameRepeatMsg = "";
+          this.userTelRepeatMsg = "";
         }
-        this.$refs.registForm.validateField("u_name");
+        this.$refs.registForm.validateField("u_tel");
       });
     },
     // 用户登录接口
     userLogin() {
-      if (!this.loginTel) {
+      if (!this.loginForm.u_tel) {
         this.$message({
           message: "请输入手机号码",
           type: "warning",
         });
         return;
       }
-      if (!this.loginPwd) {
+      if (!this.loginForm.u_pass) {
         this.$message({
           message: "请输入密码",
           type: "warning",
         });
         return;
       }
-      let params = {
-        u_phone: this.loginTel,
-        u_pass: this.loginPwd,
-      };
       this.$http
-        .post("/user/userLogin", params)
+        .post("/user/userLogin", this.loginForm)
         .then((res) => {
           // console.log(res);
           if (res && res.status == 200 && res.data.userInfo.length > 0) {
@@ -349,8 +308,10 @@ export default {
             }, 3000);
           } else {
             this.$message.error("密码错误,请重试！");
-            this.loginTel = "";
-            this.loginPwd = "";
+            this.loginForm = {
+              u_tel: "",
+              u_pass: "",
+            };
           }
         })
         .catch((e) => {
@@ -504,7 +465,7 @@ export default {
 
 .regist {
   /deep/ .el-dialog {
-    margin-top: 35px !important;
+    margin-top: 160px !important;
   }
 
   /deep/ .el-dialog {

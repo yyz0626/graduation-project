@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <!-- <pre>{{ userInfo }}</pre> -->
     <el-form
       :model="userInfo"
       status-icon
@@ -7,44 +8,45 @@
       :rules="rules"
       label-width="100px"
       label-position="left"
-      v-if="userInfo.u_id"
+      v-if="userInfo.info_fk_uId"
     >
-      <el-form-item label="头像" prop="u_phone">
+      <el-form-item label="头像">
         <el-upload
           class="photo-uploader"
           :action="domain"
           :http-request="upqiniu"
           :before-upload="beforeUpload"
         >
-          <el-avatar :size="100" :src="userInfo.u_avatar" />
+          <el-avatar :size="100" :src="userInfo.info_avatar" />
         </el-upload>
       </el-form-item>
-      <el-form-item label="联系电话" prop="u_phone">
-        <el-input v-model="userInfo.u_phone" :disabled="true" />
+
+      <el-form-item label="联系电话">
+        <el-input v-model="userInfo.u_tel" :disabled="true" />
       </el-form-item>
-      <el-form-item label="性别" prop="u_gender">
-        <el-radio-group v-model="userInfo.u_gender" :disabled="true">
-          <el-radio :label="0">男</el-radio>
-          <el-radio :label="1">女</el-radio>
+      <el-form-item label="性别" prop="info_gender">
+        <el-radio-group v-model="userInfo.info_gender">
+          <el-radio label="0">男</el-radio>
+          <el-radio label="1">女</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="用户名" prop="u_name">
-        <el-input v-model="userInfo.u_name" />
+      <el-form-item label="用户名" prop="info_name">
+        <el-input v-model="userInfo.info_name" />
       </el-form-item>
-      <el-form-item label="生日" prop="u_age">
+      <el-form-item label="生日" prop="info_birthday">
         <el-date-picker
-          v-model="userInfo.u_age"
+          v-model="userInfo.info_birthday"
           type="date"
           placeholder="选择日期"
         />
       </el-form-item>
 
-      <el-form-item label="Email" prop="u_email">
-        <el-input v-model="userInfo.u_email" />
+      <el-form-item label="Email" prop="info_email">
+        <el-input v-model="userInfo.info_email" />
       </el-form-item>
       <el-form-item label="兴趣爱好" prop="u_hobby">
         <el-select
-          v-model="hobby"
+          v-model="userInfo.info_hobby"
           multiple
           filterable
           allow-create
@@ -82,9 +84,17 @@ export default {
   },
   data() {
     // 生日校验
-    var checkAge = (rule, value, callback) => {
+    var checkBirthday = (rule, value, callback) => {
       if (!value) {
         return callback(new Error("生日不能为空"));
+      } else {
+        callback();
+      }
+    };
+    // 生日校验
+    var checkGender = (rule, value, callback) => {
+      if (value != 0 && value != 1) {
+        return callback(new Error("请选择性别"));
       } else {
         callback();
       }
@@ -139,12 +149,12 @@ export default {
           label: "篮球",
         },
       ],
-      hobby: [],
       // 个人信息表单验证规则
       rules: {
-        u_age: [{ validator: checkAge, trigger: "blur" }],
-        u_name: [{ validator: checkName, trigger: "blur" }],
-        u_email: [{ validator: checkEmail, trigger: "blur" }],
+        info_birthday: [{ validator: checkBirthday, trigger: "blur" }],
+        info_name: [{ validator: checkName, trigger: "blur" }],
+        info_email: [{ validator: checkEmail, trigger: "blur" }],
+        info_gender: [{ validator: checkGender, trigger: "change" }],
       },
       // 七牛云的上传地址，根据自己所在地区选择，我这里是华东区
       domain: "https://upload-z2.qiniup.com",
@@ -155,19 +165,7 @@ export default {
   created() {
     this.getUserInfoById(this.u_id);
   },
-  watch: {
-    userInfo: {
-      handler() {
-        if (this.userInfo.u_avatar == null) {
-          console.log(this.userInfo);
-          console.log(1);
-          this.userInfo.u_avatar =
-            "https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png";
-        }
-      },
-      deep: true,
-    },
-  },
+  watch: {},
   methods: {
     // 提交表单
     submitForm(formName) {
@@ -189,11 +187,10 @@ export default {
       this.$http
         .post("/user/getUserInfoById", params)
         .then((res) => {
-          // console.log(res);
-          if (res && res.status == 200 && res.data.userInfo[0]) {
+          if (res && res.data.userInfo[0]) {
             this.userInfo = res.data.userInfo[0];
-            if (this.userInfo.u_hobby) {
-              this.hobby = this.userInfo.u_hobby.split(",");
+            if (this.userInfo.info_hobby) {
+              this.userInfo.info_hobby = this.userInfo.info_hobby.split(",");
             }
           }
         })
@@ -208,17 +205,20 @@ export default {
     // 更新用户信息接口
     updateUserInfo() {
       let params = {
-        u_name: this.userInfo.u_name,
-        u_age: this.$moment(this.userInfo.u_age).format("YYYY-MM-DD"),
-        u_email: this.userInfo.u_email,
-        u_hobby: this.hobby.toString(),
-        u_id: this.userInfo.u_id,
-        u_avatar: this.userInfo.u_avatar,
+        info_fk_uId: this.userInfo.info_fk_uId,
+        info_name: this.userInfo.info_name,
+        info_birthday: this.$moment(this.userInfo.info_birthday).format(
+          "YYYY-MM-DD"
+        ),
+        info_email: this.userInfo.info_email,
+        info_hobby: this.userInfo.info_hobby.toString(),
+        info_avatar: this.userInfo.info_avatar,
+        info_gender: this.userInfo.info_gender,
       };
+      console.log(params.info_avatar);
       this.$http
         .post("/user/updateUserInfo", params)
         .then((res) => {
-          // console.log(res);
           if (res && res.status == 200 && res.data.userInfo) {
             this.$message({
               message: "保存成功",
@@ -241,7 +241,6 @@ export default {
 
     // 上传文件到七牛云
     upqiniu(req) {
-      // console.log(req);
       const config = {
         headers: { "Content-Type": "multipart/form-data" },
       };
@@ -251,22 +250,18 @@ export default {
       } else {
         filetype = "jpg";
       }
-      console.log();
       // 重命名要上传的文件
       const keyname =
         "yyz" + "-" + req.file.name.split(".")[0] + "." + filetype;
-      // console.log(keyname);
       // 从后端获取上传凭证token
       this.$http.get("/user/getQiNiuToken").then((res) => {
-        // console.log(res);
         const formdata = new FormData();
         formdata.append("file", req.file);
         formdata.append("token", res.data.uploadToken);
         formdata.append("key", keyname);
         // 获取到凭证之后再将文件上传到七牛云空间
         this.$http.post(this.domain, formdata, config).then((res) => {
-          // console.log(res);
-          this.userInfo.u_avatar =
+          this.userInfo.info_avatar =
             "http://" + this.qiniuaddr + "/" + res.data.key;
         });
       });

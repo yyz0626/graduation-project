@@ -7,15 +7,12 @@ module.exports = {
     // 用户登录
     async userLogin(ctx) {
         let {
-            u_phone,
+            u_tel,
             u_pass,
         } = ctx.request.body;
-        let results = await model.userLogin(u_phone, u_pass);
-        console.log(results);
+        let results = await model.userLogin(u_tel, u_pass);
         if (results.length > 0) {
-            let u_id = results[0].u_id
             let payload = {
-                u_id: u_id,
                 myToken: 'myToken'
             }
             var token = createToken(payload);
@@ -38,20 +35,12 @@ module.exports = {
         let {
             u_name,
             u_pass,
-            u_age,
-            u_gender,
-            u_phone,
-            u_email,
-            status,
+            u_tel,
         } = ctx.request.body;
         let results = await model.userRegist({
             u_name,
             u_pass,
-            u_age,
-            u_gender,
-            u_phone,
-            u_email,
-            status,
+            u_tel,
         })
         if (results.insertId) {
             ctx.body = {
@@ -60,12 +49,13 @@ module.exports = {
         }
     },
 
-    // 用户名重复
-    async checkUserNameRepeat(ctx) {
+    // 用户电话号码重复
+    async checkTelRepeat(ctx) {
         let {
-            u_name,
+            u_tel,
         } = ctx.request.body;
-        let results = await model.checkUserNameRepeat(u_name)
+        let results = await model.checkTelRepeat(u_tel)
+        console.log(results);
         ctx.body = {
             userDetails: results
         }
@@ -77,25 +67,24 @@ module.exports = {
             u_id
         } = ctx.request.body;
         let results = await model.getUserInfoById(u_id);
-        if (results.length > 0) {
-            ctx.body = {
-                userInfo: results,
-            }
+        console.log(results);
+        ctx.body = {
+            userInfo: results,
         }
     },
 
     // 更新用户信息
     async updateUserInfo(ctx) {
         let {
-            u_age,
-            u_name,
-            u_email,
-            u_hobby,
-            u_id,
-            u_avatar
+            info_fk_uId,
+            info_name,
+            info_birthday,
+            info_email,
+            info_hobby,
+            info_avatar,
+            info_gender
         } = ctx.request.body;
-        let results = await model.updateUserInfo(u_age, u_name, u_email, u_hobby, u_id, u_avatar);
-        // console.log(results.insertId);
+        let results = await model.updateUserInfo(info_fk_uId, info_name, info_birthday, info_email, info_hobby, info_avatar, info_gender);
         if (results.insertId >= 0) {
             ctx.body = {
                 userInfo: results,
@@ -103,13 +92,4 @@ module.exports = {
         }
     },
 
-
-
-    async getUserId(ctx) {
-        let results = await model.getUserId()
-        console.log('2222', results);
-        ctx.body = {
-            comments: results
-        }
-    }
 };

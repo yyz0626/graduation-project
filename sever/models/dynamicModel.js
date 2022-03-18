@@ -18,17 +18,17 @@ module.exports = {
 
     // 根据动态id获取动态信息
     getDynamicDetailById(d_id) {
-        return db.query("select * from dynamic where d_id = ?", [d_id]);
+        return db.query("select * from dynamic where d_id = ? ORDER BY createTime DESC", [d_id]);
     },
 
     // 动态查看次数+1
     addDynamicViewNum(d_id) {
-        return db.query("update dynamic set count = count + 1 where d_id = ?", [d_id]);
+        return db.query("update dynamic_information set info_count = info_count + 1 where info_fk_dId = ?", [d_id]);
     },
 
     // 查询动态列表浏览次数前5
     getDynamicListByTop5() {
-        return db.query("SELECT * FROM dynamic ORDER BY count DESC limit 5");
+        return db.query("SELECT * FROM dynamic_information, dynamic where dynamic_information.info_fk_dId = dynamic.d_id ORDER BY info_count DESC limit 5");
     },
 
     // 模糊查询

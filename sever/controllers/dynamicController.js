@@ -54,6 +54,7 @@ module.exports = {
             d_id
         } = ctx.request.body;
         let results = await model.getDynamicDetailById(d_id);
+        console.log(results);
         if (results.length > 0) {
             await model.addDynamicViewNum(d_id)
             const lastDynamic = await model.getLastDynamic(d_id)
@@ -81,7 +82,6 @@ module.exports = {
             string
         } = ctx.request.body;
         let results = await model.getDynamicByFuzzy(string);
-        console.log(results);
         ctx.body = {
             dynamicList: results,
             length: results.length

@@ -24,7 +24,7 @@
         </div>
         <div class="avatar" v-else>
           <el-dropdown trigger="click" @command="handleCommand">
-            <el-avatar :size="50" title="个人" :src="avatarUrl" />
+            <el-avatar :size="50" title="个人" :src="userInfo.info_avatar" />
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item icon="el-icon-user" command="personal"
                 >个人资料</el-dropdown-item
@@ -74,20 +74,7 @@ export default {
       return JSON.parse(localStorage.getItem("userInfo"));
     },
   },
-  watch: {
-    userInfo: {
-      handler() {
-        if (this.userInfo.u_avatar) {
-          this.avatarUrl = this.userInfo.u_avatar;
-        } else {
-          this.avatarUrl =
-            "https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png";
-        }
-      },
-      deep: true,
-      immediate: true,
-    },
-  },
+  watch: {},
   mounted() {
     // console.log(this.$store.state);
   },
