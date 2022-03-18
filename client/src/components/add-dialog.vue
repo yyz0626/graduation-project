@@ -10,13 +10,15 @@
     <el-dialog title="发布动态" :visible.sync="dialogFormVisible">
       <el-form
         :model="dynamic"
+        status-icon
+        :rules="rules"
         ref="dynamic"
         label-width="90px"
-        label-position="right"
+        label-position="left"
         class="demo-dynamic"
       >
         <el-form-item label="动态标题" prop="d_title">
-          <el-input v-model="dynamic.d_title"></el-input>
+          <el-input v-model="dynamic.d_title" placeholder="请输入动态标题" />
         </el-form-item>
         <el-form-item label="动态类型" prop="d_type">
           <el-select v-model="dynamic.d_type" placeholder="请选择动态类型">
@@ -31,7 +33,7 @@
           prop="d_group"
           v-if="dynamic.d_type == 4"
         >
-          <el-switch v-model="dynamic.d_group"></el-switch>
+          <el-switch v-model="dynamic.d_group" />
         </el-form-item>
         <el-form-item
           label="组队人数"
@@ -49,17 +51,17 @@
         <el-form-item label="动态内容" prop="d_content">
           <el-input
             type="textarea"
-            :rows="5"
-            :autosize="{ minRows: 5, maxRows: 8 }"
+            placeholder="请输入动态内容"
+            :autosize="{ minRows: 3 }"
             v-model="dynamic.d_content"
             maxlength="500"
             show-word-limit
           />
         </el-form-item>
 
-        <el-form-item label="申请置顶" prop="d_topping">
+        <!-- <el-form-item label="申请置顶" prop="d_topping">
           <el-switch v-model="dynamic.d_topping" />
-        </el-form-item>
+        </el-form-item> -->
 
         <el-form-item>
           <el-button type="primary" @click="submitForm('dynamic')"
@@ -75,6 +77,30 @@
 <script>
 export default {
   data() {
+    // 动态标题校验
+    var checkTitle = async (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error("请输入标题"));
+      } else {
+        callback();
+      }
+    };
+    // 动态标题校验
+    var checkType = async (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error("请选择动态类型"));
+      } else {
+        callback();
+      }
+    };
+    // 动态内容校验
+    var checkContent = async (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error("请输入内容"));
+      } else {
+        callback();
+      }
+    };
     return {
       dialogFormVisible: false,
       dynamic: {
@@ -83,36 +109,12 @@ export default {
         d_group: false,
         d_groupNum: 0,
         d_content: "",
-        d_topping: false,
+        // d_topping: false,
       },
       rules: {
-        title: [
-          { required: true, message: "请输入活动名称", trigger: "blur" },
-          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
-        ],
-        type: [
-          { required: true, message: "请选择活动区域", trigger: "change" },
-        ],
-        date1: [
-          {
-            type: "date",
-            required: true,
-            message: "请选择日期",
-            trigger: "change",
-          },
-        ],
-        date2: [
-          {
-            type: "date",
-            required: true,
-            message: "请选择时间",
-            trigger: "change",
-          },
-        ],
-        resource: [
-          { required: true, message: "请选择活动资源", trigger: "change" },
-        ],
-        desc: [{ required: true, message: "请填写活动形式", trigger: "blur" }],
+        d_title: [{ validator: checkTitle, trigger: "blur" }],
+        d_type: [{ validator: checkType, trigger: "change" }],
+        d_content: [{ validator: checkContent, trigger: "blur" }],
       },
     };
   },

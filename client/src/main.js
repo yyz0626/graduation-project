@@ -19,7 +19,7 @@ Vue.use(SlideVerify);
 
 Vue.prototype.$http = http
 Vue.prototype.$moment = moment
-
+moment.locale('zh-cn');
 
 new Vue({
   router,

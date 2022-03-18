@@ -8,7 +8,7 @@
     <div class="top" v-if="!isLogin" />
     <!-- 内容区域 -->
     <div class="container">
-      <router-view />
+      <router-view :key="$route.fullPath" />
     </div>
     <!-- 底部 -->
     <div class="bottom" v-if="!isLogin && !isPersonal" />
@@ -47,7 +47,6 @@ export default {
         } else {
           this.isPersonal = false;
         }
-        console.log(this.isPersonal);
       },
       immediate: true,
     },

@@ -190,9 +190,11 @@ export default {
         .post("/user/getUserInfoById", params)
         .then((res) => {
           // console.log(res);
-          if (res && res.status == 200) {
+          if (res && res.status == 200 && res.data.userInfo[0]) {
             this.userInfo = res.data.userInfo[0];
-            this.hobby = this.userInfo.u_hobby.split(",");
+            if (this.userInfo.u_hobby) {
+              this.hobby = this.userInfo.u_hobby.split(",");
+            }
           }
         })
         .catch((e) => {
@@ -222,9 +224,7 @@ export default {
               message: "保存成功",
               type: "success",
             });
-            console.log(this.userInfo.u_avatar);
             this.getUserInfoById(this.u_id);
-            // this.$store.dispatch("UPDATE_USERINFO");
             this.$store.dispatch("SET_USERINFO", JSON.stringify(this.userInfo));
             this.$router.go(0);
           } else {

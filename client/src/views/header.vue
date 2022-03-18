@@ -29,8 +29,11 @@
               <el-dropdown-item icon="el-icon-user" command="personal"
                 >个人资料</el-dropdown-item
               >
-              <el-dropdown-item icon="el-icon-chat-line-round" command="dynamic"
+              <el-dropdown-item icon="el-icon-chat-dot-round" command="dynamic"
                 >我的动态</el-dropdown-item
+              >
+              <el-dropdown-item icon="el-icon-phone-outline" command="questions"
+                >问题反馈</el-dropdown-item
               >
               <el-dropdown-item icon="el-icon-close" command="logout"
                 >退出</el-dropdown-item
@@ -107,6 +110,10 @@ export default {
           path: "/personal",
           query: { u_id: this.userInfo.u_id },
         });
+      }
+      // 跳转个人信息页
+      if (command == "questions") {
+        console.log(1);
       }
       // 跳转个人动态页
       if (command == "dynamic") {

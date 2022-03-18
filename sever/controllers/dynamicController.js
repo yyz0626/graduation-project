@@ -56,16 +56,19 @@ module.exports = {
         let results = await model.getDynamicDetailById(d_id);
         if (results.length > 0) {
             await model.addDynamicViewNum(d_id)
+            const lastDynamic = await model.getLastDynamic(d_id)
+            const nextDynamic = await model.getNextDynamic(d_id)
             ctx.body = {
                 dynamicList: results,
-                length: results.length
+                lastDynamic: lastDynamic,
+                nextDynamic: nextDynamic,
             }
         }
     },
 
-    // 查询动态列表浏览次数前10
-    async getDynamicListByTop10(ctx) {
-        let results = await model.getDynamicListByTop10();
+    // 查询动态列表浏览次数前5
+    async getDynamicListByTop5(ctx) {
+        let results = await model.getDynamicListByTop5();
         ctx.body = {
             dynamicList: results,
             length: results.length

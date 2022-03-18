@@ -18,8 +18,8 @@ router.post('/getDynamicListByType', controller.getDynamicListByType)
 // 根据动态id获取动态信息
 router.post('/getDynamicDetailById', controller.getDynamicDetailById)
 
-// 查询动态列表浏览次数前10
-router.get('/getDynamicListByTop10', controller.getDynamicListByTop10)
+// 查询动态列表浏览次数前5
+router.get('/getDynamicListByTop5', controller.getDynamicListByTop5)
 
 // 模糊查询
 router.post('/getDynamicByFuzzy', controller.getDynamicByFuzzy)

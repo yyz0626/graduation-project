@@ -13,7 +13,7 @@
 export default {
   data() {
     return {
-      dynamiTop10List: [],
+      dynamiTop5List: [],
       inputVal: "",
       timeout: null,
     };
@@ -23,13 +23,13 @@ export default {
     // 查询匹配
     async querySearchAsync(queryString, cb) {
       if (this.inputVal == "") {
-        // 查看数前十条动态
-        const res = await this.$http.get("/dynamic/getDynamicListByTop10");
+        // 查看数前五条动态
+        const res = await this.$http.get("/dynamic/getDynamicListByTop5");
         if (res && res.status == 200) {
-          var arrTop10 = JSON.parse(
+          var arrTop5 = JSON.parse(
             JSON.stringify(res.data.dynamicList).replace(/d_title/g, "value")
           );
-          this.dynamiTop10List = arrTop10;
+          this.dynamiTop5List = arrTop5;
         }
       } else {
         // 模糊查询
@@ -41,10 +41,10 @@ export default {
           var arr = JSON.parse(
             JSON.stringify(res.data.dynamicList).replace(/d_title/g, "value")
           );
-          this.dynamiTop10List = arr;
+          this.dynamiTop5List = arr;
         }
       }
-      var results = this.dynamiTop10List;
+      var results = this.dynamiTop5List;
       // clearTimeout(this.timeout);
       // this.timeout = setTimeout(() => {
       cb(results);
