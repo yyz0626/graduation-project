@@ -47,5 +47,18 @@ module.exports = {
     getNextDynamic(d_id) {
         let dbStr = `select * from dynamic where createTime <(select createTime from dynamic where d_id =${d_id})order by createTime DESC limit 1`
         return db.query(dbStr);
-    }
+    },
+
+    // 模糊查询
+    getCommentsById(c_fk_dId) {
+        let dbStr = `select * from comment,users_information where comment.c_fk_dId = ${c_fk_dId} and comment.from_uId=users_information.info_fk_uId order by create_time ASC`
+        return db.query(dbStr);
+    },
+
+    // 发表评论
+    publishComment(comment) {
+        console.log(comment);
+        return db.query("insert into comment set ?", comment);
+    },
+
 }

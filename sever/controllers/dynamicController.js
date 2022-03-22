@@ -40,7 +40,7 @@ module.exports = {
             d_fk_uId,
             d_pictures
         })
-        console.log(results);
+        // console.log(results);
         if (results.insertId) {
             ctx.body = {
                 message: "发表成功"
@@ -54,7 +54,7 @@ module.exports = {
             d_id
         } = ctx.request.body;
         let results = await model.getDynamicDetailById(d_id);
-        console.log(results);
+        // console.log(results);
         if (results.length > 0) {
             await model.addDynamicViewNum(d_id)
             const lastDynamic = await model.getLastDynamic(d_id)
@@ -88,65 +88,39 @@ module.exports = {
         }
     },
 
-
-
-
-
-
-
-
-    async getBlogComment(ctx) {
-        let blog_id = ctx.query.blogId;
-        let results = await model.getBlogComment(blog_id)
-        ctx.body = {
-            comments: results
-        }
-    },
-    async getBlogDetail(ctx) {
-        let blog_id = ctx.query.blogId;
-        let results = await model.getBlogDetail(blog_id);
-        ctx.body = {
-            detail: results
-        }
-    },
-
-    async writeComment(ctx) {
-        // console.log(ctx.request);
+    // 查询评论
+    async getCommentsById(ctx) {
         let {
-            comm_content,
-            blog_id,
-            user_id
+            c_fk_dId
         } = ctx.request.body;
-        if (comm_content.trim().length == 0) {
-            ctx.body = {
-                message: "评论不能为空"
-            }
-        } else {
-            let results = await model.saveContent({
-                comm_content,
-                blog_id,
-                user_id
-            })
-            // console.log(results);
-            if (results.insertId) {
-                ctx.body = {
-                    message: "评论成功"
-                }
-            } else {}
+        let results = await model.getCommentsById(c_fk_dId);
+        ctx.body = {
+            commentsList: results,
         }
     },
-    async delete(ctx) {
+
+    // 发表评论
+    async publishComment(ctx) {
         let {
-            blogId
+            c_fk_dId,
+            from_uId,
+            to_uId,
+            c_content
         } = ctx.request.body;
-        console.log(blogId);
-        let results = await model.deleteBlog(blogId);
-        // console.log(results);
-        if (results) {
-            // console.log(1);
+        console.log(c_fk_dId,
+            from_uId,
+            to_uId,
+            c_content);
+        let results = await model.publishComment({
+            c_fk_dId,
+            from_uId,
+            to_uId,
+            c_content
+        });
+        if (results.insertId) {
             ctx.body = {
-                message: '删除成功'
+                message: "发表成功"
             }
-        } else {}
-    }
+        }
+    },
 };

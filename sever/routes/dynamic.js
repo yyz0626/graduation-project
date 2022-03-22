@@ -24,12 +24,14 @@ router.get('/getDynamicListByTop5', controller.getDynamicListByTop5)
 // 模糊查询
 router.post('/getDynamicByFuzzy', controller.getDynamicByFuzzy)
 
+// 评论查询
+router.post('/getCommentsById', controller.getCommentsById)
+
+// 发表评论
+router.post('/publishComment', controller.publishComment)
 
 
 
-router.get('/comment', controller.getBlogComment)
-router.get('/detail', controller.getBlogDetail)
-router.post('/writeComment', verifyToken, controller.writeComment)
-router.post('/delete', controller.delete)
+
 
 module.exports = router
