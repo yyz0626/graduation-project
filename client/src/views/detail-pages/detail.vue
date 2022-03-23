@@ -1,31 +1,34 @@
 <template>
   <div class="container">
-    <!-- <pre>{{ d_detail }}</pre> -->
-    <div class="title">
-      {{ d_detail.d_title }}
-    </div>
-
-    <div class="detail">
-      {{ d_detail.d_type }}·{{ $moment(d_detail.createTime).format("lll") }}
-    </div>
-
-    <div class="content">
-      {{ d_detail.d_content }}
-    </div>
-
-    <div class="pic">
-      <div v-for="(item, index) in picList" :key="index">
-        <img :src="item" alt="" />
+    <!-- 动态信息 -->
+    <div class="dynamic-info">
+      <div class="title">
+        {{ d_detail.d_title }}
       </div>
-    </div>
 
-    <div class="edit-time" v-if="d_detail.updateTime != d_detail.createTime">
-      最后编辑于：{{ $moment(d_detail.updateTime).format("lll") }}
+      <div class="detail">
+        {{ d_detail.d_type }}·{{ $moment(d_detail.createTime).format("lll") }}
+      </div>
+
+      <div class="content">
+        {{ d_detail.d_content }}
+      </div>
+
+      <div class="pic">
+        <div v-for="(item, index) in picList" :key="index">
+          <img :src="item" alt="" />
+        </div>
+      </div>
+
+      <div class="edit-time" v-if="d_detail.updateTime != d_detail.createTime">
+        最后编辑于：{{ $moment(d_detail.updateTime).format("lll") }}
+      </div>
     </div>
 
     <!-- 快进 -->
     <div class="fast-forward">
-      <div class="last-dynamic">
+      <!-- 上一篇 -->
+      <div>
         上一篇:
         <p v-if="last_dynamic">
           <router-link
@@ -35,6 +38,7 @@
         </p>
         <p v-else>没有了..</p>
       </div>
+      <!-- 下一篇 -->
       <div>
         下一篇:
         <p v-if="next_dynamic">
@@ -47,44 +51,104 @@
       </div>
     </div>
 
+    <!-- 评论信息 -->
     <div class="comment">
-      <p class="add-new-comment">添加新评论</p>
+      <!-- 评论框 -->
       <div class="comment-input">
+        <p class="add-new-comment">添加新评论</p>
         <el-input
           type="textarea"
           placeholder="在这里输入你的评论..."
           :autosize="{ minRows: 5, maxRows: 5 }"
           v-model="content_val"
           maxlength="300"
-          show-word-limit
         />
+        <p class="limit">{{ content_val.length }}/300</p>
         <el-button type="primary" @click="publishComment">提交评论</el-button>
       </div>
 
-      <div class="comment-output" v-if="commentsList.length > 0">
-        已有 {{ commentsList.length }} 条评论
-      </div>
-
-      <div class="comment-output" v-else>暂无评论</div>
-
-      <div
-        v-for="(item, index) in commentsList"
-        :key="index"
-        class="comment-detail"
-      >
-        <!-- <pre>{{ item }}</pre> -->
-
-        <div class="floor">第{{ index + 1 }}楼</div>
-        <img :src="item.info_avatar" alt="" />
-
-        <div class="info">
-          <p class="name">{{ item.info_name }}</p>
-          <p class="time">
-            {{ $moment(item.create_time).format("lll") }}
+      <!-- 评论区 -->
+      <div class="comment-output">
+        <!-- 评论条数 -->
+        <div class="comment-output-title">
+          <p v-if="commentsList.length > 0">
+            已有 {{ commentsList.length }} 条评论
           </p>
-          <p class="contents">{{ item.c_content }}</p>
+          <p v-else>暂无评论</p>
+        </div>
+
+        <!-- 评论列表 -->
+        <div
+          v-for="(item, index) in commentsList"
+          :key="index"
+          class="comment-output-detail"
+        >
+          <div class="comment-output-detail-left">
+            <div class="floor">第{{ index + 1 }}楼</div>
+            <img :src="item.info_avatar" />
+          </div>
+
+          <div class="info">
+            <p class="name">{{ item.info_name }}</p>
+            <p class="time">
+              {{ $moment(item.create_time).format("lll") }}
+            </p>
+            <p class="contents">
+              <span v-if="item.to_uId" style="margin-right: 10px"
+                >@{{ item.to_uName }}</span
+              >{{ item.c_content }}
+            </p>
+          </div>
+          <div class="reply-button">
+            <el-button type="text" @click="reply(item)">回复</el-button>
+          </div>
+
+          <!-- 评论回复 -->
+          <div class="reply-list" v-if="JSON.parse(item.reply_list).length > 0">
+            <div
+              v-for="(reply, replyIndex) in JSON.parse(item.reply_list)"
+              :key="replyIndex"
+              class="reply-list-item"
+            >
+              <div class="reply-list-item-left">
+                <img :src="reply.info_avatar" />
+              </div>
+              <div class="reply-list-item-right">
+                <p class="name">{{ reply.to_uName }}</p>
+                <p class="time">
+                  {{ $moment(reply.create_time).format("lll") }}
+                </p>
+                <p class="contents">
+                  <span v-if="reply.to_uId" style="margin-right: 10px"
+                    >@{{ reply.to_uName }}</span
+                  >{{ reply.c_content }}
+                </p>
+              </div>
+              <div class="reply-buttons">
+                <el-button type="text" @click="test(item)">回复</el-button>
+              </div>
+            </div>
+          </div>
+          <!-- {{ item.reply_list }} -->
         </div>
       </div>
+
+      <!-- 回复对话框 -->
+      <el-dialog title="评论回复" :visible.sync="dialogVisible" width="30%">
+        <!-- <span>这是一段信息</span> -->
+        <el-input
+          type="textarea"
+          placeholder="在这里输入你的评论..."
+          :autosize="{ minRows: 5, maxRows: 5 }"
+          v-model="content_diglog_val"
+          maxlength="300"
+          show-word-limit
+        />
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="replyComment">确 定</el-button>
+        </span>
+      </el-dialog>
     </div>
     <!-- <no-data v-if="!postsId" /> -->
   </div>
@@ -101,16 +165,26 @@ export default {
       d_id: this.$route.query.d_id,
       d_detail: "",
       content_val: "",
+      content_diglog_val: "",
       last_dynamic: "",
       next_dynamic: "",
       picList: "",
+      reply_info: "",
+      // 评论对话框显示
+      dialogVisible: false,
       // 评论列表
       commentsList: [],
+      replyList: "",
     };
   },
   computed: {
     userInfo() {
       return JSON.parse(localStorage.getItem("userInfo"));
+    },
+  },
+  watch: {
+    dialogVisible() {
+      this.content_diglog_val = "";
     },
   },
   created() {
@@ -130,7 +204,9 @@ export default {
             this.d_detail = res.data.dynamicList[0];
             this.last_dynamic = res.data.lastDynamic[0];
             this.next_dynamic = res.data.nextDynamic[0];
-            this.picList = this.d_detail.d_pictures.split(",");
+            this.picList = this.d_detail.d_pictures
+              ? this.d_detail.d_pictures.split(",")
+              : [];
           }
         })
         .catch((e) => {
@@ -151,7 +227,7 @@ export default {
         .then((res) => {
           if (res && res.status == 200 && res.data) {
             this.commentsList = res.data.commentsList;
-            console.log(res.data.commentsList);
+            // console.log(res.data.commentsList);
           }
         })
         .catch((e) => {
@@ -167,9 +243,8 @@ export default {
       const userInfo = this.userInfo;
       let params = {
         from_uId: userInfo.u_id || "",
-        to_uId: 0,
-        c_content: this.content_val,
-        c_fk_dId: this.d_id,
+        c_content: this.content_val || "",
+        c_fk_dId: this.d_id || "",
       };
       this.$http
         .post("/dynamic/publishComment", params)
@@ -194,7 +269,60 @@ export default {
             type: "warning",
           });
         });
-      console.log(params);
+    },
+
+    // 评论回复按钮
+    reply(item) {
+      this.dialogVisible = true;
+      this.reply_info = item;
+    },
+    test(item) {
+      this.dialogVisible = true;
+      this.reply_info = item;
+    },
+    // 回复评论
+    replyComment() {
+      const userInfo = this.userInfo;
+      const reply_info = this.reply_info;
+      let obj = {
+        from_uId: userInfo.u_id || "",
+        to_uId: userInfo.from_uId,
+        to_uName: userInfo.info_name,
+        c_content: this.content_diglog_val,
+        create_time: new Date(),
+        info_avatar: userInfo.info_avatar,
+      };
+
+      this.replyList = JSON.parse(reply_info.reply_list);
+      this.replyList.push(obj);
+      let params = {
+        reply_fk_cId: reply_info.c_id,
+        reply_list: JSON.stringify(this.replyList),
+      };
+
+      this.$http
+        .post("/dynamic/replyComment", params)
+        .then((res) => {
+          if (res && res.status == 200) {
+            this.$message({
+              message: "回复成功",
+              type: "success",
+            });
+            this.dialogFormVisible = false;
+            setTimeout(() => {
+              this.$router.go(0);
+            }, 1000);
+            this.content_val = "";
+          } else {
+            this.$message.error("回复失败");
+          }
+        })
+        .catch((e) => {
+          this.$message({
+            message: e,
+            type: "warning",
+          });
+        });
     },
   },
 };
@@ -209,31 +337,34 @@ export default {
     text-decoration: none;
   }
 }
-.title {
-  text-align: center;
-  font-size: 44px;
-}
-.detail {
-  text-align: center;
-  margin-top: 10px;
-}
-.content {
-  margin-top: 15px;
-  text-indent: 2em;
-  line-height: 30px;
-  font-size: 18px;
+
+// 动态信息
+.dynamic-info {
+  .title {
+    text-align: center;
+    font-size: 44px;
+  }
+  .detail {
+    text-align: center;
+    margin-top: 10px;
+  }
+  .content {
+    margin-top: 15px;
+    text-indent: 2em;
+    line-height: 30px;
+    font-size: 18px;
+  }
+  .pic {
+    margin-top: 10px;
+    text-align: center;
+  }
+  .edit-time {
+    margin-left: 550px;
+    color: #7a7676bc;
+  }
 }
 
-.edit-time {
-  margin-left: 550px;
-  color: #7a7676bc;
-}
-
-.pic {
-  margin-top: 10px;
-  text-align: center;
-}
-
+// 快进
 .fast-forward {
   height: 120px;
   display: flex;
@@ -249,68 +380,134 @@ export default {
     margin-top: 5px;
   }
 }
+
+// 评论信息
 .comment {
   margin-top: 50px;
+}
+
+.comment-input {
+  margin-bottom: 40px;
   .add-new-comment {
     color: #409eff;
     font-size: 28px;
     margin-bottom: 30px;
   }
-  // .comment-input {
-  //   // height: 120px;
-  // }
-}
-.el-button--primary {
-  width: 100%;
-  margin-top: 30px;
+  .el-button--primary {
+    width: 100%;
+    margin-top: 30px;
+  }
+  .el-textarea {
+    // z-index: -1;
+    position: static;
+  }
+  .limit {
+    float: right;
+    margin-top: 5px;
+    font-size: 14px;
+    color: rgb(182, 182, 182);
+  }
 }
 
 .comment-output {
-  margin-top: 40px;
-  font-size: 28px;
-  margin-bottom: 20px;
-}
-.comment-detail {
-  position: relative;
-  height: 120px;
-  margin-bottom: 20px;
-  padding: 10px 10px 0 10px;
-  // border-bottom: 3px solid rgb(243, 243, 243);
-  z-index: -1;
+  .comment-output-title {
+    font-size: 28px;
+    margin-bottom: 20px;
+  }
 
-  .floor {
-    margin-left: 20px;
-    margin-bottom: 5px;
-  }
-  img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-  }
-  .info {
-    .name {
-      position: absolute;
-      top: 40px;
-      left: 100px;
-      color: rgb(55, 129, 179);
+  .comment-output-detail {
+    margin-bottom: 20px;
+    padding: 10px 10px 0 10px;
+    // border-bottom: 3px solid rgb(246, 246, 246);
+
+    .comment-output-detail-left {
+      display: inline-block;
+      vertical-align: top;
+      .floor {
+        margin-left: 20px;
+        margin-bottom: 5px;
+      }
+      img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+      }
+    }
+
+    .info {
+      display: inline-block;
+      vertical-align: top;
+      width: 690px;
+      margin-top: 25px;
+      margin-left: 10px;
+
+      .name {
+        color: rgb(55, 129, 179);
+        font-size: 16px;
+      }
+      .time {
+        margin-top: 5px;
+        font-size: 13px;
+      }
+      .contents {
+        margin-top: 5px;
+        font-size: 20px;
+      }
+    }
+
+    .reply-button {
+      display: inline-block;
+      // height: 100%;
+      // margin-left: 550px;
       font-size: 16px;
     }
-    .time {
-      position: absolute;
-      top: 65px;
-      left: 100px;
-      font-size: 13px;
-    }
-    .contents {
-      position: absolute;
-      top: 90px;
-      left: 100px;
-      font-size: 20px;
+
+    .reply-list {
+      margin-left: 120px;
+      padding-left: 10px;
+      border-left: 3px solid rgb(246, 246, 246);
+      .reply-list-item {
+        width: 700px;
+        // background-color: red;
+        margin-bottom: 20px;
+        img {
+          width: 80px;
+          height: 80px;
+          border-radius: 50%;
+        }
+        .reply-list-item-left {
+          display: inline-block;
+          vertical-align: top;
+          width: 100px;
+          height: 80px;
+        }
+        .reply-list-item-right {
+          display: inline-block;
+          vertical-align: top;
+          width: 547px;
+          margin-top: 15px;
+          .name {
+            color: rgb(55, 129, 179);
+            font-size: 16px;
+          }
+          .time {
+            margin-top: 5px;
+            font-size: 13px;
+          }
+          .contents {
+            margin-top: 5px;
+            font-size: 20px;
+          }
+        }
+        .reply-buttons {
+          display: inline-block;
+          // height: 100%;
+          // margin-left: 550px;
+          font-size: 16px;
+          // margin-left: 10px;
+        }
+      }
     }
   }
-}
-
-.el-textarea {
-  position: static;
 }
 </style>

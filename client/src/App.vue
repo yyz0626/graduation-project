@@ -63,10 +63,9 @@ export default {
   margin-top: 85px;
 }
 .bottom {
-  position: relative;
-  bottom: 0px;
-  background: #fff;
   width: 100%;
+  margin-top: 50px;
   height: 65px;
+  background: #fff;
 }
 </style>

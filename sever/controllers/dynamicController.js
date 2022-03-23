@@ -104,18 +104,13 @@ module.exports = {
         let {
             c_fk_dId,
             from_uId,
-            to_uId,
-            c_content
+            c_content,
         } = ctx.request.body;
-        console.log(c_fk_dId,
-            from_uId,
-            to_uId,
-            c_content);
+
         let results = await model.publishComment({
             c_fk_dId,
             from_uId,
-            to_uId,
-            c_content
+            c_content,
         });
         if (results.insertId) {
             ctx.body = {
@@ -123,4 +118,20 @@ module.exports = {
             }
         }
     },
+
+    // 回复评论
+    async replyComment(ctx) {
+        let {
+            reply_list,
+            reply_fk_cId
+        } = ctx.request.body;
+        let results = await model.replyComment(reply_list, reply_fk_cId);
+        if (results.insertId >= 0) {
+            ctx.body = {
+                message: "发表成功"
+            }
+        }
+    },
+
+
 };

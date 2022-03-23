@@ -30,6 +30,9 @@ router.post('/getCommentsById', controller.getCommentsById)
 // 发表评论
 router.post('/publishComment', controller.publishComment)
 
+// 回复评论
+router.post('/replyComment', controller.replyComment)
+
 
 
 
