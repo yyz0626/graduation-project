@@ -2,9 +2,8 @@ const router = require('koa-router')()
 const qiniu = require("qiniu");
 let controller = require('../controllers/userController')
 
-
 const {
-  createToken
+  verifyToken
 } = require('../auth')
 
 router.prefix('/user')
@@ -19,7 +18,7 @@ router.post('/checkTelRepeat', controller.checkTelRepeat)
 router.post('/userLogin', controller.userLogin)
 
 // 根据用户id获取用户信息
-router.post('/getUserInfoById', controller.getUserInfoById)
+router.post('/getUserInfoById', verifyToken, controller.getUserInfoById)
 
 // 更新用户信息
 router.post('/updateUserInfo', controller.updateUserInfo)

@@ -1,4 +1,7 @@
 import axios from 'axios'
+import {
+    MessageBox
+} from 'element-ui'
 
 const instance = axios.create({
     baseURL: "http://localhost:3000",
@@ -8,7 +11,7 @@ const instance = axios.create({
 //添加请求拦截器
 instance.interceptors.request.use(
     function (config) {
-        let token = localStorage.getItem('mytoken');
+        let token = localStorage.getItem('token');
         config.headers['Authorization'] = "Bearer " + token;
         return config;
     },
@@ -19,36 +22,33 @@ instance.interceptors.request.use(
 
 
 //添加响应拦截器
-// instance.interceptors.response.use(
-//     function (response) {
-//         // 对响应数据做点什么
-//         return response;
-//     },
-//     function (error) {
-//         // 对响应错误做点什么
-//         let {
-//             status
-//         } = error.response;
-//         console.log(status);
-//         if (status == 401) {
-//             // store.dispatch('logout');
-//             // this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-//             //   confirmButtonText: '确定',
-//             //   cancelButtonText: '取消',
-//             //   type: 'warning'
-//             // }).then(() => {
-//             //   this.$message({
-//             //     type: 'success',
-//             //     message: '删除成功!'
-//             //   });
-//             // })
-//             // this.$message('这是一条消息提示');
-
-//             alert("登录后才可以评论哦~")
-//             location.href = "/login";
-//         }
-//         // return Promise.reject(error);
-//     }
-// );
+instance.interceptors.response.use(
+    function (response) {
+        // 对响应数据做点什么
+        return response;
+    },
+    function (error) {
+        // 对响应错误做点什么
+        let {
+            status
+        } = error.response;
+        if (status == 401) {
+            MessageBox.confirm(
+                '您还未登录或登录已过期，请先登录哦~',
+                '登陆提示', {
+                    confirmButtonText: '立即登录',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }
+            ).then(() => {
+                location.href = "/login";
+            })
+        }
+        if (status == 402) {
+            location.href = "/404";
+        }
+        // return Promise.reject(error);
+    }
+);
 
 export default instance;

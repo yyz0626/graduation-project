@@ -68,10 +68,10 @@ export default {
   },
   computed: {
     token() {
-      return localStorage.getItem("token");
+      return localStorage.getItem("token") || "";
     },
     userInfo() {
-      return JSON.parse(localStorage.getItem("userInfo"));
+      return JSON.parse(localStorage.getItem("userInfo")) || "";
     },
   },
   watch: {},
@@ -122,6 +122,7 @@ export default {
   line-height: 80px;
   position: fixed;
   top: 0;
+  z-index: 99;
 }
 /deep/ .el-menu--horizontal > .el-menu-item {
   height: 80px;

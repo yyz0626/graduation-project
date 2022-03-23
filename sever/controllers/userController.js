@@ -55,7 +55,6 @@ module.exports = {
             u_tel,
         } = ctx.request.body;
         let results = await model.checkTelRepeat(u_tel)
-        console.log(results);
         ctx.body = {
             userDetails: results
         }
@@ -67,7 +66,6 @@ module.exports = {
             u_id
         } = ctx.request.body;
         let results = await model.getUserInfoById(u_id);
-        console.log(results);
         ctx.body = {
             userInfo: results,
         }

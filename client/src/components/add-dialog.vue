@@ -3,7 +3,7 @@
     <el-button
       type="primary"
       icon="el-icon-edit"
-      @click="dialogFormVisible = true"
+      @click="openDialog"
       class="add-btn"
       circle
     />
@@ -132,7 +132,26 @@ export default {
       picList: [],
     };
   },
+  computed: {
+    token() {
+      return localStorage.getItem("token") || "";
+    },
+    userInfo() {
+      return JSON.parse(localStorage.getItem("userInfo")) || "";
+    },
+  },
   methods: {
+    openDialog() {
+      if (!this.token) {
+        this.$message({
+          showClose: true,
+          message: "请先登录再发布动态哦~",
+          type: "warning",
+        });
+        return;
+      }
+      this.dialogFormVisible = true;
+    },
     // 发布动态
     publishDynamic() {
       let { d_title, d_type, d_content } = this.dynamic;
@@ -143,7 +162,8 @@ export default {
         d_title,
         d_type,
         d_content,
-        d_fk_uId: 1,
+        d_fk_uId: this.userInfo.info_fk_uId,
+        d_fk_uName: this.userInfo.info_name,
         d_pictures: picList.toString(),
       };
       this.$http

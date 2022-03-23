@@ -128,7 +128,7 @@ export default {
       }, 100);
     };
     return {
-      u_id: this.$route.query.u_id,
+      u_id: Number(this.$route.query.u_id),
       userInfo: "",
       activeName: "first",
       hobbyOptions: [
@@ -162,8 +162,20 @@ export default {
       qiniuaddr: "r8jcjikss.hn-bkt.clouddn.com",
     };
   },
+  computed: {
+    token() {
+      return localStorage.getItem("token") || "";
+    },
+    userInfos() {
+      return JSON.parse(localStorage.getItem("userInfo")) || "";
+    },
+  },
   created() {
-    this.getUserInfoById(this.u_id);
+    if (this.userInfos.u_id == this.u_id) {
+      this.getUserInfoById(this.u_id);
+    } else {
+      location.href = "/404";
+    }
   },
   watch: {},
   methods: {
@@ -189,6 +201,7 @@ export default {
         .then((res) => {
           if (res && res.data.userInfo[0]) {
             this.userInfo = res.data.userInfo[0];
+            // this.$store.dispatch("SET_USERINFO", JSON.stringify(this.userInfo));
             if (this.userInfo.info_hobby) {
               this.userInfo.info_hobby = this.userInfo.info_hobby.split(",");
             }
@@ -215,7 +228,6 @@ export default {
         info_avatar: this.userInfo.info_avatar,
         info_gender: this.userInfo.info_gender,
       };
-      console.log(params.info_avatar);
       this.$http
         .post("/user/updateUserInfo", params)
         .then((res) => {

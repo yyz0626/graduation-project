@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-if="d_detail">
     <!-- 动态信息 -->
     <div class="dynamic-info">
       <div class="title">
@@ -7,14 +7,16 @@
       </div>
 
       <div class="detail">
-        {{ d_detail.d_type }}·{{ $moment(d_detail.createTime).format("lll") }}
+        {{ d_detail.d_type }} ·
+        {{ $moment(d_detail.createTime).format("lll") }} ·
+        {{ d_detail.d_fk_uName }}
       </div>
 
       <div class="content">
         {{ d_detail.d_content }}
       </div>
 
-      <div class="pic">
+      <div class="pic" v-if="picList.length > 0">
         <div v-for="(item, index) in picList" :key="index">
           <img :src="item" alt="" />
         </div>
@@ -114,7 +116,7 @@
                 <img :src="reply.info_avatar" />
               </div>
               <div class="reply-list-item-right">
-                <p class="name">{{ reply.to_uName }}</p>
+                <p class="name">{{ reply.from_uName }}</p>
                 <p class="time">
                   {{ $moment(reply.create_time).format("lll") }}
                 </p>
@@ -129,7 +131,6 @@
               </div>
             </div>
           </div>
-          <!-- {{ item.reply_list }} -->
         </div>
       </div>
 
@@ -179,7 +180,7 @@ export default {
   },
   computed: {
     userInfo() {
-      return JSON.parse(localStorage.getItem("userInfo"));
+      return JSON.parse(localStorage.getItem("userInfo")) || "";
     },
   },
   watch: {
@@ -240,10 +241,19 @@ export default {
 
     // 发表评论
     publishComment() {
+      if (!this.content_val) {
+        this.$message({
+          showClose: true,
+          message: "评论不能为空哦~",
+          type: "warning",
+        });
+        return;
+      }
       const userInfo = this.userInfo;
+      // console.log(userInfo);
       let params = {
         from_uId: userInfo.u_id || "",
-        c_content: this.content_val || "",
+        c_content: this.content_val,
         c_fk_dId: this.d_id || "",
       };
       this.$http
@@ -259,8 +269,6 @@ export default {
               this.$router.go(0);
             }, 1000);
             this.content_val = "";
-          } else {
-            this.$message.error("评论失败");
           }
         })
         .catch((e) => {
@@ -280,19 +288,21 @@ export default {
       this.dialogVisible = true;
       this.reply_info = item;
     },
+
     // 回复评论
     replyComment() {
       const userInfo = this.userInfo;
       const reply_info = this.reply_info;
       let obj = {
         from_uId: userInfo.u_id || "",
-        to_uId: userInfo.from_uId,
-        to_uName: userInfo.info_name,
+        to_uId: reply_info.from_uId,
+        to_uName: reply_info.info_name,
+        from_uName: userInfo.info_name,
         c_content: this.content_diglog_val,
         create_time: new Date(),
         info_avatar: userInfo.info_avatar,
       };
-
+      // console.log(userInfo, reply_info, obj);
       this.replyList = JSON.parse(reply_info.reply_list);
       this.replyList.push(obj);
       let params = {

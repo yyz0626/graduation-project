@@ -6,6 +6,11 @@ module.exports = {
         return db.query("SELECT * from dynamic ORDER BY createTime DESC");
     },
 
+    // 查询用户发布动态列表
+    getDynamicListByUserId(d_fk_uId) {
+        return db.query("select * from dynamic where d_fk_uId = ?", [d_fk_uId]);
+    },
+
     // 根据type类型查询全部动态列表
     getDynamicListByType(d_type) {
         return db.query("select * from dynamic where d_type = ?", [d_type]);

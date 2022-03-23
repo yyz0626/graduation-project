@@ -12,6 +12,19 @@ module.exports = {
         }
     },
 
+    // 查询用户发布动态列表
+    async getDynamicListByUserId(ctx) {
+        let {
+            d_fk_uId
+        } = ctx.request.body;
+        let results = await model.getDynamicListByUserId(d_fk_uId);
+        ctx.body = {
+            dynamicList: results,
+            length: results.length
+        }
+    },
+
+
     // 根据type类型查询全部动态列表
     async getDynamicListByType(ctx) {
         let {
@@ -31,14 +44,16 @@ module.exports = {
             d_type,
             d_content,
             d_fk_uId,
-            d_pictures
+            d_pictures,
+            d_fk_uName
         } = ctx.request.body;
         let results = await model.publishDynamic({
             d_title,
             d_type,
             d_content,
             d_fk_uId,
-            d_pictures
+            d_pictures,
+            d_fk_uName
         })
         // console.log(results);
         if (results.insertId) {
@@ -54,7 +69,6 @@ module.exports = {
             d_id
         } = ctx.request.body;
         let results = await model.getDynamicDetailById(d_id);
-        // console.log(results);
         if (results.length > 0) {
             await model.addDynamicViewNum(d_id)
             const lastDynamic = await model.getLastDynamic(d_id)
@@ -63,6 +77,11 @@ module.exports = {
                 dynamicList: results,
                 lastDynamic: lastDynamic,
                 nextDynamic: nextDynamic,
+            }
+        } else {
+            ctx.status = 402;
+            ctx.body = {
+                dynamicList: []
             }
         }
     },

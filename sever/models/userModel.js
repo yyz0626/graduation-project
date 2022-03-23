@@ -8,7 +8,7 @@ module.exports = {
 
     // 用户登录
     userLogin(u_tel, u_pass) {
-        return db.query("SELECT * from users,`users_information` where users.u_tel = ? and users.u_pass = ?", [u_tel, u_pass]);
+        return db.query("SELECT * from users,`users_information` where users.u_tel = ? and users.u_pass = ? and users.u_id =users_information.info_fk_uId ", [u_tel, u_pass]);
     },
 
     // 用户电话号码重复

@@ -7,10 +7,19 @@ const {
 router.prefix('/dynamic')
 
 // 发布动态
-router.post('/publishDynamic', controller.publishDynamic)
+router.post('/publishDynamic', verifyToken, controller.publishDynamic)
+
+// 发表评论
+router.post('/publishComment', verifyToken, controller.publishComment)
+
+// 回复评论
+router.post('/replyComment', verifyToken, controller.replyComment)
 
 // 查询全部动态列表
 router.get('/getDynamicList', controller.getDynamicList)
+
+// 查询用户发布动态列表
+router.post('/getDynamicListByUserId', controller.getDynamicListByUserId)
 
 // 根据type类型查询全部动态列表
 router.post('/getDynamicListByType', controller.getDynamicListByType)
@@ -26,15 +35,5 @@ router.post('/getDynamicByFuzzy', controller.getDynamicByFuzzy)
 
 // 评论查询
 router.post('/getCommentsById', controller.getCommentsById)
-
-// 发表评论
-router.post('/publishComment', controller.publishComment)
-
-// 回复评论
-router.post('/replyComment', controller.replyComment)
-
-
-
-
 
 module.exports = router
