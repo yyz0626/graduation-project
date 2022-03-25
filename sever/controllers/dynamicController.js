@@ -63,6 +63,47 @@ module.exports = {
         }
     },
 
+    // 修改动态
+    async updateDynamic(ctx) {
+        let {
+            d_id,
+            d_title,
+            d_type,
+            d_content,
+            d_pictures,
+        } = ctx.request.body;
+        let results = await model.updateDynamic(
+            d_id,
+            d_title,
+            d_type,
+            d_content,
+            d_pictures,
+        )
+        // console.log(results);
+        if (results.insertId >= 0) {
+            ctx.body = {
+                message: "发表成功"
+            }
+        }
+    },
+
+    // 修改动态
+    async deleteDynamic(ctx) {
+        let {
+            d_id,
+        } = ctx.request.body;
+        let results = await model.deleteDynamic(
+            d_id,
+        )
+        // console.log(results);
+        if (results.insertId >= 0) {
+            ctx.body = {
+                message: "发表成功"
+            }
+        }
+    },
+
+
     // 根据动态id获取动态信息
     async getDynamicDetailById(ctx) {
         let {

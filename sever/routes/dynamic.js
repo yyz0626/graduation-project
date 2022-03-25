@@ -9,6 +9,12 @@ router.prefix('/dynamic')
 // 发布动态
 router.post('/publishDynamic', verifyToken, controller.publishDynamic)
 
+// 修改动态
+router.post('/updateDynamic', verifyToken, controller.updateDynamic)
+
+// 删除动态
+router.post('/deleteDynamic', verifyToken, controller.deleteDynamic)
+
 // 发表评论
 router.post('/publishComment', verifyToken, controller.publishComment)
 

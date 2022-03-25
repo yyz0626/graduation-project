@@ -21,6 +21,16 @@ module.exports = {
         return db.query("insert into dynamic set ?", dynamic);
     },
 
+    // 修改动态
+    updateDynamic(d_id, d_title, d_type, d_content, d_pictures) {
+        return db.query("update dynamic set d_title = ?,d_type = ?, d_content = ?, d_pictures = ? where d_id = ?", [d_title, d_type, d_content, d_pictures, d_id]);
+    },
+
+    // 删除动态
+    deleteDynamic(d_id) {
+        return db.query("DELETE FROM dynamic WHERE d_id=?", [d_id])
+    },
+
     // 根据动态id获取动态信息
     getDynamicDetailById(d_id) {
         return db.query("select * from dynamic where d_id = ? ORDER BY createTime DESC", [d_id]);

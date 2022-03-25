@@ -32,7 +32,7 @@
               <el-dropdown-item icon="el-icon-chat-dot-round" command="dynamic"
                 >我的动态</el-dropdown-item
               >
-              <el-dropdown-item icon="el-icon-phone-outline" command="questions"
+              <el-dropdown-item icon="el-icon-phone-outline" command="help"
                 >问题反馈</el-dropdown-item
               >
               <el-dropdown-item icon="el-icon-close" command="logout"
@@ -98,9 +98,11 @@ export default {
           query: { u_id: this.userInfo.u_id },
         });
       }
-      // 跳转个人信息页
-      if (command == "questions") {
-        console.log(1);
+      // 跳转问题反馈页
+      if (command == "help") {
+        this.$router.push({
+          path: "/help",
+        });
       }
       // 跳转个人动态页
       if (command == "dynamic") {

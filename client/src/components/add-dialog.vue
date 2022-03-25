@@ -72,7 +72,7 @@
           </el-upload>
         </el-form-item>
 
-        <el-form-item>
+        <el-form-item style="margin-left: 260px">
           <el-button type="primary" @click="submitForm('dynamic')"
             >立即发布</el-button
           >
