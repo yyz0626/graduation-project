@@ -291,6 +291,14 @@ export default {
 
     // 回复评论
     replyComment() {
+      if (!this.content_diglog_val) {
+        this.$message({
+          showClose: true,
+          message: "回复不能为空哦~",
+          type: "warning",
+        });
+        return;
+      }
       const userInfo = this.userInfo;
       const reply_info = this.reply_info;
       let obj = {
@@ -323,8 +331,6 @@ export default {
               this.$router.go(0);
             }, 1000);
             this.content_val = "";
-          } else {
-            this.$message.error("回复失败");
           }
         })
         .catch((e) => {
