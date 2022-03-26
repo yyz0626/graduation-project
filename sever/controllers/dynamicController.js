@@ -92,15 +92,44 @@ module.exports = {
         let {
             d_id,
         } = ctx.request.body;
-        let results = await model.deleteDynamic(
-            d_id,
-        )
+        let results = await model.deleteDynamic(d_id)
         // console.log(results);
         if (results.insertId >= 0) {
             ctx.body = {
                 message: "发表成功"
             }
         }
+    },
+
+    // 问题反馈
+    async help(ctx) {
+        let {
+            help_detail,
+            help_fk_uId
+        } = ctx.request.body;
+        let results = await model.help({
+            help_detail,
+            help_fk_uId
+        })
+        if (results.insertId >= 0) {
+            ctx.body = {
+                message: "反馈成功"
+            }
+        }
+    },
+
+    // 查询问题反馈历史记录
+    async getAllHelpInfos(ctx) {
+        let {
+            help_fk_uId
+        } = ctx.request.body;
+        let results = await model.getAllHelpInfos(help_fk_uId)
+        // console.log(results);
+        // if (results.insertId >= 0) {
+        ctx.body = {
+            help_info_list: results
+        }
+        // }
     },
 
 

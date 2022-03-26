@@ -373,6 +373,9 @@ export default {
   .pic {
     margin-top: 10px;
     text-align: center;
+    img {
+      max-width: 830px;
+    }
   }
   .edit-time {
     margin-left: 550px;

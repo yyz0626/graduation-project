@@ -31,6 +31,17 @@ module.exports = {
         return db.query("DELETE FROM dynamic WHERE d_id=?", [d_id])
     },
 
+    // 问题反馈
+    help(help_info) {
+        return db.query("insert into help set ?", help_info)
+    },
+
+    // 查询问题反馈历史记录
+    getAllHelpInfos(help_fk_uId) {
+        return db.query("select * from help where help_fk_uId = ? ORDER BY create_time DESC", [help_fk_uId]);
+    },
+
+
     // 根据动态id获取动态信息
     getDynamicDetailById(d_id) {
         return db.query("select * from dynamic where d_id = ? ORDER BY createTime DESC", [d_id]);

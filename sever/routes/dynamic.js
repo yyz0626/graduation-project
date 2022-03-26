@@ -15,6 +15,12 @@ router.post('/updateDynamic', verifyToken, controller.updateDynamic)
 // 删除动态
 router.post('/deleteDynamic', verifyToken, controller.deleteDynamic)
 
+// 问题反馈
+router.post('/help', verifyToken, controller.help)
+
+// 查询问题反馈历史记录
+router.post('/getAllHelpInfos', verifyToken, controller.getAllHelpInfos)
+
 // 发表评论
 router.post('/publishComment', verifyToken, controller.publishComment)
 
