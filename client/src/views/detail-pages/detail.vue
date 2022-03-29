@@ -96,9 +96,7 @@
               {{ $moment(item.create_time).format("lll") }}
             </p>
             <p class="contents">
-              <span v-if="item.to_uId" style="margin-right: 10px"
-                >@{{ item.to_uName }}</span
-              >{{ item.c_content }}
+              {{ item.c_content }}
             </p>
           </div>
           <div class="reply-button">
@@ -127,7 +125,9 @@
                 </p>
               </div>
               <div class="reply-buttons">
-                <el-button type="text" @click="test(item)">回复</el-button>
+                <el-button type="text" @click="reply_in_floor(reply, item)"
+                  >回复</el-button
+                >
               </div>
             </div>
           </div>
@@ -171,6 +171,7 @@ export default {
       next_dynamic: "",
       picList: "",
       reply_info: "",
+      reply_info_in_floor: "",
       // 评论对话框显示
       dialogVisible: false,
       // 评论列表
@@ -279,13 +280,15 @@ export default {
         });
     },
 
-    // 评论回复按钮
+    // 每层楼评论回复按钮
     reply(item) {
       this.dialogVisible = true;
       this.reply_info = item;
     },
-    test(item) {
+
+    reply_in_floor(reply, item) {
       this.dialogVisible = true;
+      this.reply_info_in_floor = reply;
       this.reply_info = item;
     },
 
@@ -301,11 +304,16 @@ export default {
       }
       const userInfo = this.userInfo;
       const reply_info = this.reply_info;
+      const reply_info_in_floor = this.reply_info_in_floor;
       let obj = {
         from_uId: userInfo.u_id || "",
-        to_uId: reply_info.from_uId,
-        to_uName: reply_info.info_name,
         from_uName: userInfo.info_name,
+        to_uId: reply_info_in_floor
+          ? reply_info_in_floor.from_uId
+          : reply_info.from_uId,
+        to_uName: reply_info_in_floor
+          ? reply_info_in_floor.from_uName
+          : reply_info.info_name,
         c_content: this.content_diglog_val,
         create_time: new Date(),
         info_avatar: userInfo.info_avatar,
