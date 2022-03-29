@@ -34,7 +34,6 @@ export default {
       this.$http
         .post("/dynamic/getDynamicListByType", { d_type: 1 })
         .then((res) => {
-          console.log(res);
           if (res && res.status == 200) {
             this.dynamicList = res.data.dynamicList.reverse();
             this.dialogFormVisible = false;
