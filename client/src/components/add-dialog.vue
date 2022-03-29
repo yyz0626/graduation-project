@@ -164,7 +164,9 @@ export default {
         d_content,
         d_fk_uId: this.userInfo.info_fk_uId,
         d_fk_uName: this.userInfo.info_name,
-        d_pictures: picList.toString(),
+        d_pictures:
+          picList.toString() ||
+          `http://r8jcjikss.hn-bkt.clouddn.com/yyz-${d_type}.jpg`,
       };
       this.$http
         .post("/dynamic/publishDynamic", params)

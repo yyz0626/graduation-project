@@ -1,5 +1,5 @@
 <template>
-  <div class="background">
+  <div class="background" :style="styleObject">
     <span class="title" :title="bgData.d_title">{{ bgData.d_title }}</span>
     <span class="detail"
       >{{ bgData.d_fk_uid }} ·
@@ -17,6 +17,15 @@ export default {
       type: Object,
       default: () => {},
     },
+  },
+  data() {
+    return {
+      styleObject: {
+        backgroundImage: this.bgData.d_pictures
+          ? "url(" + this.bgData.d_pictures.split(",")[0] + ")"
+          : "url(" + require(`../static/bg/1.jpg`) + ")",
+      },
+    };
   },
   mounted() {},
   methods: {
