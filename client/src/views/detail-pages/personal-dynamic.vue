@@ -24,6 +24,16 @@
         label="动态内容"
         header-align="center"
       />
+      <el-table-column
+        prop="createTime"
+        label="发布时间"
+        width="160"
+        align="center"
+      >
+        <template slot-scope="scope">
+          {{ $moment(scope.row.createTime).format("lll") }}
+        </template>
+      </el-table-column>
       <el-table-column fixed="right" label="操作" width="180" align="center">
         <template slot-scope="scope">
           <router-link
