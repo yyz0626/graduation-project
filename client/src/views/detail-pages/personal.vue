@@ -238,14 +238,15 @@ export default {
             });
             this.getUserInfoById(this.u_id);
             this.$store.dispatch("SET_USERINFO", JSON.stringify(this.userInfo));
-            this.$router.go(0);
-          } else {
-            this.$message.error("保存失败！");
+            setTimeout(() => {
+              this.$router.go(0);
+            }, 1000);
           }
         })
         .catch((e) => {
+          console.log(e);
           this.$message({
-            message: e,
+            message: "保存失败！",
             type: "warning",
           });
         });
