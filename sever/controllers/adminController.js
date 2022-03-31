@@ -24,9 +24,15 @@ module.exports = {
 
   // 获取所有用户信息
   async getAllUserInfo(ctx) {
-    let { pageNo, pageSize, u_tel, u_status } = ctx.request.body;
-    let results = await model.getAllUserInfo(pageNo, pageSize, u_tel, u_status);
-    let length = await model.getAllUserInfoLength(u_tel, u_status);
+    let { pageNo, pageSize, u_tel, u_status, u_name } = ctx.request.body;
+    let results = await model.getAllUserInfo(
+      pageNo,
+      pageSize,
+      u_tel,
+      u_status,
+      u_name
+    );
+    let length = await model.getAllUserInfoLength(u_tel, u_status, u_name);
     ctx.body = {
       userInfoList: results,
       length: length.length,
@@ -72,9 +78,26 @@ module.exports = {
 
   // 获取所有评论信息
   async getAllCommentInfo(ctx) {
-    let { pageNo, pageSize } = ctx.request.body;
-    let results = await model.getAllCommentInfo(pageNo, pageSize);
-    let length = await model.getAllCommentInfoLength();
+    let { pageNo, pageSize, c_content, c_status, info_name, d_id, d_title } =
+      ctx.request.body;
+    console.log(c_content, c_status, info_name, d_id, d_title);
+
+    let results = await model.getAllCommentInfo(
+      pageNo,
+      pageSize,
+      c_content,
+      c_status,
+      info_name,
+      d_id,
+      d_title
+    );
+    let length = await model.getAllCommentInfoLength(
+      c_content,
+      c_status,
+      info_name,
+      d_id,
+      d_title
+    );
     ctx.body = {
       commentInfoList: results,
       length: length.length,

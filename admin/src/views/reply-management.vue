@@ -1,6 +1,53 @@
 <template>
   <div class="container">
-    <pre>{{ comment_tableData[0] }}</pre>
+    <!-- <pre>{{ comment_tableData[2] }}</pre> -->
+    <!-- 查询表单 -->
+    <div class="search-box" style="margin-bottom: 10px">
+      <el-form :inline="true" :model="comment_search" class="demo-form-inline">
+        <el-form-item label="评论内容">
+          <el-input
+            v-model="comment_search.c_content"
+            placeholder="请输入评论内容..."
+            clearable
+          />
+        </el-form-item>
+        <el-form-item label="评论人">
+          <el-input
+            v-model="comment_search.info_name"
+            placeholder="请输入评论人..."
+            clearable
+          />
+        </el-form-item>
+        <el-form-item label="评论状态">
+          <el-select v-model="comment_search.c_status">
+            <el-option label="正常" :value="1" />
+            <el-option label="删除" :value="2" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="动态ID">
+          <el-input
+            v-model="comment_search.d_id"
+            placeholder="请输入动态ID..."
+            clearable
+          />
+        </el-form-item>
+        <el-form-item label="动态标题">
+          <el-input
+            v-model="comment_search.d_title"
+            placeholder="请输入动态标题..."
+            clearable
+          />
+        </el-form-item>
+
+        <el-form-item>
+          <el-button type="primary" @click="getAllCommentInfo(1)"
+            >查询</el-button
+          >
+          <el-button type="primary" @click="reset">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+    <!-- <pre>{{ comment_tableData[0] }}</pre> -->
     <el-table
       :data="comment_tableData"
       style="width: 100%; margin-bottom: 20px"
@@ -31,16 +78,20 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="address" label="评论动态" align="center">
+      <el-table-column prop="address" label="评论动态(ID)" align="center">
         <template slot-scope="scope">
-          <router-link
-            :to="{
-              path: 'dynamic-management',
-              query: { d_id: scope.row.d_id },
-            }"
-          >
-            {{ scope.row.d_title }}
-          </router-link>
+          <div v-if="scope.row.d_id">
+            <router-link
+              :to="{
+                path: 'dynamic-management',
+                query: { d_id: scope.row.d_id },
+              }"
+            >
+              {{ scope.row.d_title }}
+              <span>({{ scope.row.d_id }})</span>
+            </router-link>
+          </div>
+          <div v-else>- -</div>
         </template>
       </el-table-column>
 
@@ -52,9 +103,7 @@
 
       <el-table-column fixed="right" label="操作" align="center">
         <template slot-scope="scope">
-          <el-button @click="deleteComment(scope.row)" type="text"
-            >删除</el-button
-          >
+          <el-button @click="deleteComment(scope)" type="text">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -81,48 +130,15 @@ export default {
   },
   data() {
     return {
-      tableData: [
-        {
-          id: 1,
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          id: 2,
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄",
-        },
-        {
-          id: 3,
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄",
-          childrens: [
-            {
-              id: 31,
-              date: "2016-05-01",
-              name: "王小虎",
-              address: "上海市普陀区金沙江路 1519 弄",
-            },
-            {
-              id: 32,
-              date: "2016-05-01",
-              name: "王小虎",
-              address: "上海市普陀区金沙江路 1519 弄",
-            },
-          ],
-        },
-        {
-          id: 4,
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1516 弄",
-        },
-      ],
       comment_tableData: "",
       comment_info: "",
+      comment_search: {
+        c_content: "",
+        c_status: 1,
+        info_name: "",
+        d_id: "",
+        d_title: "",
+      },
       pageInfo: {
         pageNo: 1,
         pageSize: 5,
@@ -130,22 +146,37 @@ export default {
       },
     };
   },
+  created() {
+    if (this.d_id) {
+      this.comment_search.d_id = this.d_id;
+    }
+    this.getAllCommentInfo();
+  },
   computed: {
-    userInfo() {
-      return JSON.parse(localStorage.getItem("userInfo")) || "";
+    adminToken() {
+      return localStorage.getItem("adminToken") || "";
+    },
+    adminInfo() {
+      return JSON.parse(localStorage.getItem("adminInfo")) || "";
+    },
+    d_id() {
+      return this.$route.query.d_id || "";
     },
   },
   watch: {},
-  created() {
-    this.getAllCommentInfo();
-  },
   methods: {
     // 获取所有评论信息
     getAllCommentInfo() {
       let params = {
         pageNo: this.pageInfo.pageNo,
         pageSize: this.pageInfo.pageSize,
+        c_content: this.comment_search.c_content,
+        c_status: this.comment_search.c_status,
+        info_name: this.comment_search.info_name,
+        d_id: this.comment_search.d_id,
+        d_title: this.comment_search.d_title,
       };
+      console.log(params);
       this.$http
         .post("/admin/getAllCommentInfo", params)
         .then((res) => {
@@ -153,12 +184,12 @@ export default {
             this.comment_tableData = res.data.commentInfoList;
             this.pageInfo.totalSize = res.data.length;
             if (this.comment_tableData.length > 0) {
-              this.setTableIndex(this.comment_tableData);
               this.comment_tableData.forEach((item, index) => {
                 this.comment_tableData[index].reply_list = JSON.parse(
                   item.reply_list
                 );
               });
+              this.setTableIndex(this.comment_tableData);
             }
           }
         })
@@ -170,15 +201,17 @@ export default {
         });
     },
 
-    // 树形列表index层级，实现方法（可复制直接调用）
+    // 树形列表index层级，实现方法
     setTableIndex(arr, index) {
+      const page = this.pageInfo.pageNo;
+      const pageSize = this.pageInfo.pageSize;
       arr.forEach((item, key) => {
-        item.index = key + 1;
+        item.index = (page - 1) * pageSize + key + 1;
         if (index) {
-          item.index = index + "-" + (key + 1);
+          item.index = (page - 1) * pageSize + index + "-" + (key + 1);
         }
-        if (item.children) {
-          this.setTableIndex(item.children, item.index);
+        if (item.reply_list) {
+          this.setTableIndex(item.reply_list, item.index);
         }
       });
     },
@@ -186,22 +219,35 @@ export default {
     handleSizeChange(val) {
       this.pageInfo.pageSize = val;
       this.pageInfo.pageNo = 1;
-      this.getAllUserInfo();
+      this.getAllCommentInfo();
     },
 
     // 改变分页页码
     handleCurrentChange(val) {
       this.pageInfo.pageNo = val;
-      this.getAllUserInfo();
+      this.getAllCommentInfo();
     },
 
-    // 序号排序
+    // 删除评论
     deleteComment(data) {
       if (data.info_fk_uId) {
+        console.log(data);
         console.log("评论");
       } else {
+        console.log(data);
         console.log("回复");
       }
+    },
+
+    // 重置
+    reset() {
+      this.comment_search = {
+        c_content: "",
+        c_status: 1,
+        info_name: "",
+        d_id: "",
+        d_title: "",
+      };
     },
   },
 };

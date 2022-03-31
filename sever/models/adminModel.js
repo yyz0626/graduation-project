@@ -15,21 +15,25 @@ module.exports = {
   },
 
   // 获取所有用户信息
-  getAllUserInfo(pageNo, pageSize, u_tel, u_status) {
+  getAllUserInfo(pageNo, pageSize, u_tel, u_status, u_name) {
     let dbStr = `select users.u_id,users.u_name,users.u_tel,users.create_time,users.u_status, users_information.info_email,users_information.info_hobby,users_information.info_avatar,users_information.info_gender,users_information.info_birthday from users,users_information where users.u_id=users_information.info_fk_uId and users.u_tel like ${
       u_tel ? `'%${u_tel}%'` : "'%'"
     }  and users.u_status like ${
       u_status == 0 ? `'%'` : `${u_status}`
-    }  ORDER BY create_time ASC limit ${(pageNo - 1) * pageSize},${pageSize};`;
+    } and users.u_name like ${
+      u_name ? `'%${u_name}%'` : "'%'"
+    } ORDER BY create_time ASC limit ${(pageNo - 1) * pageSize},${pageSize};`;
     return db.query(dbStr);
   },
 
   // 获取所有用户信息长度
-  getAllUserInfoLength(u_tel, u_status) {
+  getAllUserInfoLength(u_tel, u_status, u_name) {
     let dbStr = `select users.u_id,users.u_name,users.u_tel,users.create_time,users.u_status, users_information.info_email,users_information.info_hobby,users_information.info_avatar,users_information.info_gender,users_information.info_birthday from users,users_information where users.u_id=users_information.info_fk_uId and users.u_tel like ${
       u_tel ? `'%${u_tel}%'` : "'%'"
     } and users.u_status like ${
       u_status == 0 ? `'%'` : `${u_status}`
+    } and users.u_name like ${
+      u_name ? `'%${u_name}%'` : "'%'"
     } ORDER BY create_time ASC`;
     return db.query(dbStr);
   },
@@ -100,17 +104,42 @@ module.exports = {
   },
 
   // 获取所有评论信息
-  getAllCommentInfo(pageNo, pageSize) {
-    let dbStr = `select comment.*,users_information.info_avatar,users_information.info_fk_uId,users_information.info_name,reply.reply_list,dynamic.d_title,dynamic.d_id  from comment,users_information,reply,dynamic where comment.c_fk_dId=dynamic.d_id and comment.from_uId=users_information.info_fk_uId and comment.c_id=reply.reply_fk_cId order by create_time ASC limit ${
-      (pageNo - 1) * pageSize
-    },${pageSize};`;
+  getAllCommentInfo(
+    pageNo,
+    pageSize,
+    c_content,
+    c_status,
+    info_name,
+    d_id,
+    d_title
+  ) {
+    let dbStr = `select comment.*,users_information.info_avatar,users_information.info_fk_uId,users_information.info_name,reply.reply_list,dynamic.d_title,dynamic.d_id from comment,users_information,reply,dynamic where comment.c_fk_dId=dynamic.d_id and comment.from_uId=users_information.info_fk_uId and comment.c_id=reply.reply_fk_cId and comment.c_status like ${c_status} and comment.c_content like ${
+      c_content ? `'%${c_content}%'` : "'%'"
+    }and comment.c_content like ${
+      c_content ? `'%${c_content}%'` : "'%'"
+    }and users_information.info_name like ${
+      info_name ? `'%${info_name}%'` : "'%'"
+    }and dynamic.d_id like ${
+      d_id ? `'%${d_id}%'` : "'%'"
+    }and dynamic.d_title like ${
+      d_title ? `'%${d_title}%'` : "'%'"
+    }order by create_time ASC limit ${(pageNo - 1) * pageSize},${pageSize};`;
     return db.query(dbStr);
   },
 
   // 获取所有评论信息长度
-  getAllCommentInfoLength() {
-    let dbStr =
-      "select comment.*,users_information.info_avatar,users_information.info_fk_uId,users_information.info_name,reply.reply_list,dynamic.d_title,dynamic.d_id from comment,users_information,reply,dynamic where `comment`.c_fk_dId=dynamic.d_id and comment.from_uId=users_information.info_fk_uId and comment.c_id=reply.reply_fk_cId order by create_time ASC";
+  getAllCommentInfoLength(c_content, c_status, info_name, d_id, d_title) {
+    let dbStr = `select comment.*,users_information.info_avatar,users_information.info_fk_uId,users_information.info_name,reply.reply_list,dynamic.d_title,dynamic.d_id from comment,users_information,reply,dynamic where comment.c_fk_dId=dynamic.d_id and comment.from_uId=users_information.info_fk_uId and comment.c_id=reply.reply_fk_cId and comment.c_status like ${c_status} and comment.c_content like ${
+      c_content ? `'%${c_content}%'` : "'%'"
+    }and comment.c_content like ${
+      c_content ? `'%${c_content}%'` : "'%'"
+    }and users_information.info_name like ${
+      info_name ? `'%${info_name}%'` : "'%'"
+    }and dynamic.d_id like ${
+      d_id ? `'%${d_id}%'` : "'%'"
+    } and dynamic.d_title like ${
+      d_title ? `'%${d_title}%'` : "'%'"
+    }order by create_time ASC`;
     return db.query(dbStr);
   },
 };

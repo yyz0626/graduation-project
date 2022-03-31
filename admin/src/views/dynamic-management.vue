@@ -98,7 +98,11 @@
           <router-link
             :to="{
               path: 'user-management',
-              query: { u_tel: scope.row.u_tel, status: scope.row.status },
+              query: {
+                u_tel: scope.row.u_tel,
+                u_status: scope.row.u_status,
+                u_name: scope.row.u_name,
+              },
             }"
           >
             {{ scope.row.u_name }}
@@ -113,7 +117,16 @@
 
       <el-table-column label="评论数" align="center">
         <template slot-scope="scope">
-          {{ scope.row.info_comment_count }}次
+          <router-link
+            :to="{
+              path: 'reply-management',
+              query: {
+                d_id: scope.row.d_id,
+              },
+            }"
+          >
+            {{ scope.row.info_comment_count }}次
+          </router-link>
         </template>
       </el-table-column>
 

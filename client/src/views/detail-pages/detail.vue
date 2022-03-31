@@ -317,8 +317,9 @@ export default {
         c_content: this.content_diglog_val,
         create_time: new Date(),
         info_avatar: userInfo.info_avatar,
+        c_id: reply_info.c_id,
+        d_id: reply_info.c_fk_dId,
       };
-      console.log(obj);
       // console.log(userInfo, reply_info, obj);
       this.replyList = JSON.parse(reply_info.reply_list);
       this.replyList.push(obj);
@@ -337,7 +338,7 @@ export default {
             });
             this.dialogFormVisible = false;
             setTimeout(() => {
-              // this.$router.go(0);
+              this.$router.go(0);
             }, 1000);
             this.content_val = "";
           }

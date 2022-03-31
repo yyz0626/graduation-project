@@ -2,6 +2,13 @@
   <div class="container">
     <!-- 条件表单 -->
     <el-form :inline="true" :model="user_search">
+      <el-form-item label="用户名">
+        <el-input
+          v-model="user_search.u_name"
+          placeholder="请输入用户名..."
+          clearable
+        />
+      </el-form-item>
       <el-form-item label="用户电话">
         <el-input
           v-model="user_search.u_tel"
@@ -47,11 +54,6 @@
           <p>
             {{ scope.row.u_name }}
           </p>
-          <!-- <p>
-            （
-            {{ scope.row.info_gender == 0 ? "男" : "女" }}
-            ）
-          </p> -->
         </template>
       </el-table-column>
 
@@ -212,6 +214,7 @@ export default {
       user_search: {
         u_tel: "",
         u_status: 0,
+        u_name: "",
       },
       pageInfo: {
         pageNo: 1,
@@ -221,9 +224,10 @@ export default {
     };
   },
   created() {
-    if (this.u_tel || this.status) {
+    if (this.u_tel || this.u_status || this.u_name) {
       this.user_search.u_tel = this.u_tel;
-      this.user_search.u_status = Number(this.status);
+      this.user_search.u_status = Number(this.u_status);
+      this.user_search.u_name = this.u_name;
     }
   },
   mounted() {
@@ -239,8 +243,11 @@ export default {
     u_tel() {
       return this.$route.query.u_tel || "";
     },
-    status() {
-      return this.$route.query.status || "";
+    u_status() {
+      return this.$route.query.u_status || "";
+    },
+    u_name() {
+      return this.$route.query.u_name || "";
     },
   },
   watch: {},
@@ -252,6 +259,7 @@ export default {
         pageSize: this.pageInfo.pageSize,
         u_tel: this.user_search.u_tel,
         u_status: this.user_search.u_status,
+        u_name: this.user_search.u_name,
       };
       this.$http
         .post("/admin/getAllUserInfo", params)
@@ -295,6 +303,7 @@ export default {
       this.user_search = {
         u_tel: "",
         u_status: 0,
+        u_name: "",
       };
     },
 
