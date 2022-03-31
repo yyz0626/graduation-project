@@ -84,10 +84,11 @@ module.exports = {
 
   // 问题反馈
   async help(ctx) {
-    let { help_detail, help_fk_uId } = ctx.request.body;
+    let { help_detail, help_fk_uId, help_fk_uName } = ctx.request.body;
     let results = await model.help({
       help_detail,
       help_fk_uId,
+      help_fk_uName,
     });
     if (results.insertId >= 0) {
       ctx.body = {

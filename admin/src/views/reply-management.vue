@@ -143,7 +143,7 @@ export default {
   },
   data() {
     return {
-      comment_tableData: "",
+      comment_tableData: [],
       comment_info: "",
       isShowDeleteLine: true,
       comment_search: {

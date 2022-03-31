@@ -247,7 +247,7 @@ export default {
               this.registVisible = false;
             }, 3000);
           } else {
-            this.$message.error("发布失败");
+            this.$message.error("注册失败");
           }
         })
         .catch((e) => {

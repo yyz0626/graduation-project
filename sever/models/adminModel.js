@@ -1,9 +1,9 @@
 const db = require("./db");
 
 module.exports = {
-  // 用户注册
-  userRegist(users) {
-    return db.query("insert into users set ?", users);
+  // 管理员注册
+  adminRegist(admin) {
+    return db.query("insert into admin set ?", admin);
   },
 
   // 管理员登录
@@ -111,6 +111,14 @@ module.exports = {
     ]);
   },
 
+  // 修改管理员状态
+  updateAdminStatus(admin_type, admin_id) {
+    return db.query("update admin set admin_type = ? where admin_id = ?", [
+      admin_type,
+      admin_id,
+    ]);
+  },
+
   // 删除回复（修改回复列表）
   deleteReplyById(reply_list, reply_id) {
     console.log(reply_list, reply_id);
@@ -158,5 +166,32 @@ module.exports = {
       d_title ? `'%${d_title}%'` : "'%'"
     }order by create_time ASC`;
     return db.query(dbStr);
+  },
+
+  // 获取所有管理员信息
+  getAllAdminInfo(pageNo, pageSize, admin_tel, admin_type, admin_name) {
+    let dbStr = `select * from admin where admin_tel like ${
+      admin_tel ? `'%${admin_tel}%'` : "'%'"
+    }and admin_type like ${
+      admin_type ? `'%${admin_type}%'` : "'%'"
+    }and admin_name like ${
+      admin_name ? `'%${admin_name}%'` : "'%'"
+    }order by create_time ASC limit ${(pageNo - 1) * pageSize},${pageSize};`;
+    return db.query(dbStr);
+  },
+
+  // 获取所有管理员信息长度
+  getAllAdminInfoLength(admin_tel, admin_type, admin_name) {
+    let dbStr = `select * from admin where admin_tel like ${
+      admin_tel ? `'%${admin_tel}%'` : "'%'"
+    }and admin_type like ${
+      admin_type ? `'%${admin_type}%'` : "'%'"
+    }and admin_name like ${
+      admin_name ? `'%${admin_name}%'` : "'%'"
+    }order by create_time ASC`;
+    return db.query(dbStr);
+  },
+  getHandleProblemLengthByAdminTel(admin_tel) {
+    let dbStr = `SELECT * from help where help_fk_adminTel = ${admin_tel}`;
   },
 };

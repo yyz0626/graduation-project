@@ -25,7 +25,7 @@
         <i class="el-icon-document"></i>
         <span slot="title">评论管理</span>
       </el-menu-item>
-      <el-menu-item index="admin-management">
+      <el-menu-item index="admin-management" v-if="adminInfo.admin_type == 1">
         <i class="el-icon-user"></i>
         <span slot="title">管理员管理</span>
       </el-menu-item>
@@ -33,7 +33,7 @@
         <i class="el-icon-news"></i>
         <span slot="title">问题处理</span>
       </el-menu-item>
-      <el-menu-item index="check-record">
+      <el-menu-item index="check-record" v-if="adminInfo.admin_type == 1">
         <i class="el-icon-question"></i>
         <span slot="title">日志查看</span>
       </el-menu-item>
@@ -58,6 +58,14 @@ export default {
     return {
       isCollapse: false,
     };
+  },
+  computed: {
+    adminToken() {
+      return localStorage.getItem("admin_token") || "";
+    },
+    adminInfo() {
+      return JSON.parse(localStorage.getItem("admin_info")) || "";
+    },
   },
   methods: {
     handleOpen(key, keyPath) {

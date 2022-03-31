@@ -107,6 +107,7 @@ export default {
       let params = {
         help_detail: this.help_detail,
         help_fk_uId: this.userInfo.u_id,
+        help_fk_uName: this.userInfo.u_name,
       };
       this.$http
         .post("/dynamic/help", params)

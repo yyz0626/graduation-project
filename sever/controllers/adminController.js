@@ -22,6 +22,22 @@ module.exports = {
     }
   },
 
+  // 管理员注册
+  async adminRegist(ctx) {
+    let { admin_name, admin_pass, admin_tel, admin_type } = ctx.request.body;
+    let results = await model.adminRegist({
+      admin_name,
+      admin_pass,
+      admin_tel,
+      admin_type,
+    });
+    if (results.insertId) {
+      ctx.body = {
+        message: "注册成功",
+      };
+    }
+  },
+
   // 获取所有用户信息
   async getAllUserInfo(ctx) {
     let { pageNo, pageSize, u_tel, u_status, u_name } = ctx.request.body;
@@ -103,6 +119,29 @@ module.exports = {
     };
   },
 
+  // 获取所有管理员信息
+  async getAllAdminInfo(ctx) {
+    let { pageNo, pageSize, admin_tel, admin_type, admin_name } =
+      ctx.request.body;
+    let results = await model.getAllAdminInfo(
+      pageNo,
+      pageSize,
+      admin_tel,
+      admin_type,
+      admin_name
+    );
+    let length = await model.getAllAdminInfoLength(
+      admin_tel,
+      admin_type,
+      admin_name
+    );
+    ctx.body = {
+      adminInfoList: results,
+      length: length.length,
+      pageNo: pageNo,
+    };
+  },
+
   // 修改用户状态
   async updateUserStatus(ctx) {
     let { u_status, u_id } = ctx.request.body;
@@ -129,6 +168,17 @@ module.exports = {
   async updateCommentStatus(ctx) {
     let { c_status, c_id } = ctx.request.body;
     let results = await model.updateCommentStatus(c_status, c_id);
+    if (results.insertId >= 0) {
+      ctx.body = {
+        results: results,
+      };
+    }
+  },
+
+  // 修改管理员状态
+  async updateAdminStatus(ctx) {
+    let { admin_type, admin_id } = ctx.request.body;
+    let results = await model.updateAdminStatus(admin_type, admin_id);
     if (results.insertId >= 0) {
       ctx.body = {
         results: results,
