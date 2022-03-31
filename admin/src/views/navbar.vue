@@ -10,15 +10,15 @@
       :router="true"
     >
       <el-menu-item index="/">
-        <i class="el-icon-menu"></i>
+        <i class="el-icon-s-home"></i>
         <span slot="title">首页</span>
       </el-menu-item>
       <el-menu-item index="user-management">
-        <i class="el-icon-menu"></i>
+        <i class="el-icon-s-custom"></i>
         <span slot="title">用户管理</span>
       </el-menu-item>
       <el-menu-item index="dynamic-management">
-        <i class="el-icon-menu"></i>
+        <i class="el-icon-chat-line-round"></i>
         <span slot="title">动态管理</span>
       </el-menu-item>
       <el-menu-item index="reply-management">
@@ -26,8 +26,16 @@
         <span slot="title">评论管理</span>
       </el-menu-item>
       <el-menu-item index="admin-management">
-        <i class="el-icon-setting"></i>
+        <i class="el-icon-user"></i>
         <span slot="title">管理员管理</span>
+      </el-menu-item>
+      <el-menu-item index="handle-problem">
+        <i class="el-icon-news"></i>
+        <span slot="title">问题处理</span>
+      </el-menu-item>
+      <el-menu-item index="check-record">
+        <i class="el-icon-question"></i>
+        <span slot="title">日志查看</span>
       </el-menu-item>
     </el-menu>
     <!-- <el-radio-group v-model="isCollapse" style="margin-bottom: 20px">

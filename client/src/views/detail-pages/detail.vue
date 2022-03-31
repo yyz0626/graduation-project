@@ -318,6 +318,7 @@ export default {
         create_time: new Date(),
         info_avatar: userInfo.info_avatar,
       };
+      console.log(obj);
       // console.log(userInfo, reply_info, obj);
       this.replyList = JSON.parse(reply_info.reply_list);
       this.replyList.push(obj);
@@ -336,7 +337,7 @@ export default {
             });
             this.dialogFormVisible = false;
             setTimeout(() => {
-              this.$router.go(0);
+              // this.$router.go(0);
             }, 1000);
             this.content_val = "";
           }

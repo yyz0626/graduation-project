@@ -2,10 +2,13 @@
   <div id="app">
     <!-- 头部 -->
     <!-- <Header /> -->
-    <navbar />
+    <navbar v-if="!isLogin" />
+    <!-- <login /> -->
+    <!-- 空白区域 -->
+    <div class="top" v-if="!isLogin" />
     <!-- 内容区域 -->
     <div class="container">
-      <router-view />
+      <router-view :key="$route.fullPath" />
     </div>
     <!-- 底部 -->
     <!-- <div class="bottom" v-if="!isLogin && !isPersonal" /> -->
@@ -15,14 +18,16 @@
 </template>
 
 <script>
-import Header from "./views/header.vue";
+// import Header from "./views/header.vue";
 import navbar from "./views/navbar.vue";
+// import login from "./views/login.vue";
 
 export default {
   name: "app",
   components: {
-    Header,
+    // Header,
     navbar,
+    // login,
   },
   data() {
     return {
@@ -56,15 +61,17 @@ export default {
   margin: 0;
   padding: 0;
 }
-
-.container {
-  // background: rgb(120, 120, 129);
-  margin-top: 25px;
-  margin-left: 25vh;
+#app {
+  display: flex;
 }
-// .top {
-//   margin-top: 85px;
-// }
+.container {
+}
+.top {
+  // height: 100px;
+  margin-left: 25vh;
+  // margin-bottom: 20px;
+  // margin-top: 85px;
+}
 // .bottom {
 //   width: 100%;
 //   margin-top: 50px;

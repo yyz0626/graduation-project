@@ -9,47 +9,80 @@ const routes = [
   {
     path: "/index",
     component: index,
+    meta: { requireAuth: true },
   },
   // 首页重定向
   {
     path: "/",
     redirect: "/index",
+    meta: { requireAuth: true },
   },
   // 用户管理
   {
     path: "/user-management",
-    name: "userManagement",
+    name: "user-management",
+    meta: { requireAuth: true },
     component: () =>
       import(
-        /* webpackChunkName: "userManagement" */ "../views/user-management.vue"
+        /* webpackChunkName: "user-management" */ "../views/user-management.vue"
       ),
   },
   // 动态管理
   {
     path: "/dynamic-management",
-    name: "dynamicManagement",
+    name: "dynamic-management",
+    meta: { requireAuth: true },
     component: () =>
       import(
-        /* webpackChunkName: "dynamicManagement" */ "../views/dynamic-management.vue"
+        /* webpackChunkName: "dynamic-management" */ "../views/dynamic-management.vue"
       ),
   },
   // 评论管理
   {
     path: "/reply-management",
-    name: "replyManagement",
+    name: "reply-management",
+    meta: { requireAuth: true },
     component: () =>
       import(
-        /* webpackChunkName: "replyManagement" */ "../views/reply-management.vue"
+        /* webpackChunkName: "reply-management" */ "../views/reply-management.vue"
       ),
   },
   // 管理员管理
   {
     path: "/admin-management",
-    name: "adminManagement",
+    name: "admin-management",
+    meta: { requireAuth: true },
     component: () =>
       import(
-        /* webpackChunkName: "adminManagement" */ "../views/admin-management.vue"
+        /* webpackChunkName: "admin-management" */ "../views/admin-management.vue"
       ),
+  },
+  // 问题处理
+  {
+    path: "/handle-problem",
+    name: "handle-problem",
+    meta: { requireAuth: true },
+    component: () =>
+      import(
+        /* webpackChunkName: "handle-problem" */ "../views/handle-problem.vue"
+      ),
+  },
+  // 日志查看
+  {
+    path: "/check-record",
+    name: "check-record",
+    meta: { requireAuth: true },
+    component: () =>
+      import(
+        /* webpackChunkName: "check-record" */ "../views/check-record.vue"
+      ),
+  },
+  // 登陆页面
+  {
+    path: "/login",
+    name: "login",
+    component: () =>
+      import(/* webpackChunkName: "login" */ "../views/login.vue"),
   },
   // 404
   {
