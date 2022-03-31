@@ -101,9 +101,22 @@
         </template>
       </el-table-column>
 
-      <el-table-column fixed="right" label="操作" align="center">
+      <el-table-column label="删除时间" align="center" v-if="!isShowDeleteLine">
         <template slot-scope="scope">
-          <el-button @click="deleteComment(scope)" type="text">删除</el-button>
+          {{ $moment(scope.row.update_time).format("lll") }}
+        </template>
+      </el-table-column>
+
+      <el-table-column
+        fixed="right"
+        label="操作"
+        align="center"
+        v-if="isShowDeleteLine"
+      >
+        <template slot-scope="scope">
+          <el-button @click="deleteComment(scope.row)" type="text"
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -132,6 +145,7 @@ export default {
     return {
       comment_tableData: "",
       comment_info: "",
+      isShowDeleteLine: true,
       comment_search: {
         c_content: "",
         c_status: 1,
@@ -163,10 +177,14 @@ export default {
       return this.$route.query.d_id || "";
     },
   },
-  watch: {},
   methods: {
     // 获取所有评论信息
     getAllCommentInfo() {
+      if (this.comment_search.c_status == 1) {
+        this.isShowDeleteLine = true;
+      } else {
+        this.isShowDeleteLine = false;
+      }
       let params = {
         pageNo: this.pageInfo.pageNo,
         pageSize: this.pageInfo.pageSize,
@@ -176,7 +194,6 @@ export default {
         d_id: this.comment_search.d_id,
         d_title: this.comment_search.d_title,
       };
-      console.log(params);
       this.$http
         .post("/admin/getAllCommentInfo", params)
         .then((res) => {
@@ -228,17 +245,85 @@ export default {
       this.getAllCommentInfo();
     },
 
-    // 删除评论
+    // 删除评论或者回复
     deleteComment(data) {
       if (data.info_fk_uId) {
-        console.log(data);
-        console.log("评论");
+        this.updateCommentStatus(data);
       } else {
-        console.log(data);
-        console.log("回复");
+        let a = data.index.split("-");
+        let x = a[0] - 1;
+        let y = a[1] - 1;
+        let reply_id = this.comment_tableData[x].reply_id;
+        this.comment_info = JSON.parse(
+          JSON.stringify(this.comment_tableData[x].reply_list)
+        );
+        this.comment_info.splice(y, 1);
+        let str = JSON.stringify(this.comment_info);
+        this.deleteReplyById(str, reply_id);
       }
     },
 
+    // 删除评论操作
+    updateCommentStatus(data) {
+      this.$confirm("确定删除该评论？")
+        .then(() => {
+          let params = {
+            c_status: 2,
+            c_id: data.c_id,
+          };
+          this.$http
+            .post("/admin/updateCommentStatus", params)
+            .then((res) => {
+              if (res && res.status == 200) {
+                this.$message({
+                  message: "删除成功",
+                  type: "success",
+                });
+                setTimeout(() => {
+                  this.$router.go(0);
+                }, 1000);
+              }
+            })
+            .catch((e) => {
+              this.$message({
+                message: e,
+                type: "warning",
+              });
+            });
+        })
+        .catch(() => {});
+    },
+
+    // 删除回复操作
+    deleteReplyById(data, reply_id) {
+      this.$confirm("确定删除该回复？")
+        .then(() => {
+          let params = {
+            reply_list: data,
+            reply_id: reply_id,
+          };
+          this.$http
+            .post("/admin/deleteReplyById", params)
+            .then((res) => {
+              if (res && res.status == 200) {
+                this.$message({
+                  message: "删除成功",
+                  type: "success",
+                });
+                setTimeout(() => {
+                  this.$router.go(0);
+                }, 1000);
+              }
+            })
+            .catch((e) => {
+              this.$message({
+                message: e,
+                type: "warning",
+              });
+            });
+        })
+        .catch(() => {});
+    },
     // 重置
     reset() {
       this.comment_search = {

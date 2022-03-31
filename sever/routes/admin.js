@@ -24,6 +24,12 @@ router.post("/updateUserStatus", controller.updateUserStatus);
 // 修改动态状态
 router.post("/updateDynamicStatus", controller.updateDynamicStatus);
 
+// 修改动态状态
+router.post("/updateCommentStatus", controller.updateCommentStatus);
+
+// 删除回复（修改回复列表）
+router.post("/deleteReplyById", controller.deleteReplyById);
+
 // // 用户电话号码重复
 // router.post("/checkTelRepeat", controller.checkTelRepeat);
 

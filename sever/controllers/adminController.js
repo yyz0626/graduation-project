@@ -80,8 +80,6 @@ module.exports = {
   async getAllCommentInfo(ctx) {
     let { pageNo, pageSize, c_content, c_status, info_name, d_id, d_title } =
       ctx.request.body;
-    console.log(c_content, c_status, info_name, d_id, d_title);
-
     let results = await model.getAllCommentInfo(
       pageNo,
       pageSize,
@@ -120,6 +118,28 @@ module.exports = {
   async updateDynamicStatus(ctx) {
     let { d_status, d_id } = ctx.request.body;
     let results = await model.updateDynamicStatus(d_status, d_id);
+    if (results.insertId >= 0) {
+      ctx.body = {
+        results: results,
+      };
+    }
+  },
+
+  // 修改评论状态
+  async updateCommentStatus(ctx) {
+    let { c_status, c_id } = ctx.request.body;
+    let results = await model.updateCommentStatus(c_status, c_id);
+    if (results.insertId >= 0) {
+      ctx.body = {
+        results: results,
+      };
+    }
+  },
+
+  // 删除回复（修改回复列表）
+  async deleteReplyById(ctx) {
+    let { reply_list, reply_id } = ctx.request.body;
+    let results = await model.deleteReplyById(reply_list, reply_id);
     if (results.insertId >= 0) {
       ctx.body = {
         results: results,

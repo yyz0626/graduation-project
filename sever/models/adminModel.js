@@ -103,6 +103,23 @@ module.exports = {
     ]);
   },
 
+  // 修改评论状态
+  updateCommentStatus(c_status, c_id) {
+    return db.query("update comment set c_status = ? where c_id = ?", [
+      c_status,
+      c_id,
+    ]);
+  },
+
+  // 删除回复（修改回复列表）
+  deleteReplyById(reply_list, reply_id) {
+    console.log(reply_list, reply_id);
+    return db.query("update reply set reply_list = ? where reply_id = ?", [
+      reply_list,
+      reply_id,
+    ]);
+  },
+
   // 获取所有评论信息
   getAllCommentInfo(
     pageNo,
@@ -113,7 +130,7 @@ module.exports = {
     d_id,
     d_title
   ) {
-    let dbStr = `select comment.*,users_information.info_avatar,users_information.info_fk_uId,users_information.info_name,reply.reply_list,dynamic.d_title,dynamic.d_id from comment,users_information,reply,dynamic where comment.c_fk_dId=dynamic.d_id and comment.from_uId=users_information.info_fk_uId and comment.c_id=reply.reply_fk_cId and comment.c_status like ${c_status} and comment.c_content like ${
+    let dbStr = `select comment.*,users_information.info_avatar,users_information.info_fk_uId,users_information.info_name,reply.*,dynamic.d_title,dynamic.d_id from comment,users_information,reply,dynamic where comment.c_fk_dId=dynamic.d_id and comment.from_uId=users_information.info_fk_uId and comment.c_id=reply.reply_fk_cId and comment.c_status like ${c_status} and comment.c_content like ${
       c_content ? `'%${c_content}%'` : "'%'"
     }and comment.c_content like ${
       c_content ? `'%${c_content}%'` : "'%'"
@@ -129,7 +146,7 @@ module.exports = {
 
   // 获取所有评论信息长度
   getAllCommentInfoLength(c_content, c_status, info_name, d_id, d_title) {
-    let dbStr = `select comment.*,users_information.info_avatar,users_information.info_fk_uId,users_information.info_name,reply.reply_list,dynamic.d_title,dynamic.d_id from comment,users_information,reply,dynamic where comment.c_fk_dId=dynamic.d_id and comment.from_uId=users_information.info_fk_uId and comment.c_id=reply.reply_fk_cId and comment.c_status like ${c_status} and comment.c_content like ${
+    let dbStr = `select comment.*,users_information.info_avatar,users_information.info_fk_uId,users_information.info_name,reply.*,dynamic.d_title,dynamic.d_id from comment,users_information,reply,dynamic where comment.c_fk_dId=dynamic.d_id and comment.from_uId=users_information.info_fk_uId and comment.c_id=reply.reply_fk_cId and comment.c_status like ${c_status} and comment.c_content like ${
       c_content ? `'%${c_content}%'` : "'%'"
     }and comment.c_content like ${
       c_content ? `'%${c_content}%'` : "'%'"
