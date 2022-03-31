@@ -147,13 +147,13 @@
           <el-button
             @click="suspend(scope.row)"
             type="text"
-            v-if="scope.row.d_status != 3"
+            v-if="scope.row.d_status != 3 && adminInfo.admin_type == 1"
             >暂停</el-button
           >
           <el-button
             @click="recovery(scope.row)"
             type="text"
-            v-if="scope.row.d_status == 3"
+            v-if="scope.row.d_status == 3 && adminInfo.admin_type == 1"
             >恢复</el-button
           >
         </template>
@@ -174,7 +174,6 @@
         label-position="left"
         class="demo-dynamic"
       >
-        <pre>{{ dynamicInfo }}</pre>
         <el-form-item label="动态状态">
           <el-select v-model="dynamicInfo.d_status">
             <el-option label="普通展示" value="1" />
@@ -243,10 +242,10 @@ export default {
   },
   computed: {
     adminToken() {
-      return localStorage.getItem("adminToken") || "";
+      return localStorage.getItem("admin_token") || "";
     },
     adminInfo() {
-      return JSON.parse(localStorage.getItem("adminInfo")) || "";
+      return JSON.parse(localStorage.getItem("admin_info")) || "";
     },
     u_tel() {
       return this.$route.query.u_tel || "";

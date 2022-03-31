@@ -76,6 +76,7 @@
           {{ $moment(scope.row.create_time).format("lll") }}
         </template>
       </el-table-column>
+
       <!-- 操作 -->
       <el-table-column fixed="right" label="操作" width="180" align="center">
         <template slot-scope="scope">
@@ -89,11 +90,11 @@
           <el-button
             @click="cancellation(scope.row)"
             type="text"
-            v-if="scope.row.u_status != 5"
+            v-if="scope.row.u_status != 5 && adminInfo.admin_type == 1"
             >注销</el-button
           >
           <el-button
-            v-if="scope.row.u_status == 5"
+            v-if="scope.row.u_status == 5 && adminInfo.admin_type == 1"
             @click="recovery(scope.row)"
             type="text"
             >恢复</el-button
@@ -235,10 +236,10 @@ export default {
   },
   computed: {
     adminToken() {
-      return localStorage.getItem("adminToken") || "";
+      return localStorage.getItem("admin_token") || "";
     },
     adminInfo() {
-      return JSON.parse(localStorage.getItem("adminInfo")) || "";
+      return JSON.parse(localStorage.getItem("admin_info")) || "";
     },
     u_tel() {
       return this.$route.query.u_tel || "";
