@@ -27,7 +27,7 @@
       </el-form>
     </div>
 
-    <pre>{{ problem_tableData[0] }}</pre>
+    <!-- <pre>{{ problem_tableData[0] }}</pre> -->
     <!-- 表格 -->
     <el-table
       :data="problem_tableData"
@@ -48,6 +48,21 @@
         align="center"
         :show-overflow-tooltip="true"
       />
+
+      <el-table-column label="反馈用户" align="center" width="120">
+        <template slot-scope="scope">
+          <router-link
+            :to="{
+              path: 'user-management',
+              query: {
+                u_name: scope.row.help_fk_uName,
+              },
+            }"
+          >
+            {{ scope.row.help_fk_uName }}
+          </router-link>
+        </template>
+      </el-table-column>
 
       <el-table-column prop="address" label="问题提出时间" align="center">
         <template slot-scope="scope">
@@ -229,7 +244,7 @@ export default {
         .then((res) => {
           if (res && res.status == 200) {
             this.$message({
-              message: "修改成功",
+              message: "处理成功",
               type: "success",
             });
             setTimeout(() => {
@@ -312,8 +327,8 @@ export default {
   a {
     text-decoration: none;
     color: #409eff;
-    font-size: 12px;
-    margin-right: 8px;
+    // font-size: 12px;
+    // margin-right: 8px;
   }
 }
 /deep/ .el-dialog {
