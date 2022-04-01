@@ -73,6 +73,12 @@
         >
       </el-table-column>
 
+      <el-table-column prop="address" label="注册时间" align="center">
+        <template slot-scope="scope">
+          {{ $moment(scope.row.create_time).format("lll") }}
+        </template>
+      </el-table-column>
+
       <el-table-column fixed="right" label="操作" align="center">
         <template slot-scope="scope">
           <div v-if="scope.row.admin_type == 1">暂无</div>
@@ -99,7 +105,7 @@
         label-position="left"
       >
         <el-form-item label="管理员账号">
-          {{ 20000 + admin_index }}
+          {{ 20000 + pageInfo.totalSize }}
         </el-form-item>
         <el-form-item prop="admin_name" label="管理员名称">
           <el-input
@@ -166,7 +172,6 @@ export default {
       admin_tableData: [],
       comment_info: "",
       addAdminDialogVisible: false,
-      admin_index: "",
       admin_regist_form: {
         admin_pass: "",
         admin_name: "",
@@ -188,8 +193,8 @@ export default {
     };
   },
   created() {
-    if (this.d_id) {
-      this.admin_search.d_id = this.d_id;
+    if (this.admin_tel) {
+      this.admin_search.admin_tel = this.admin_tel;
     }
     this.getAllAdminInfo();
   },
@@ -200,8 +205,8 @@ export default {
     adminInfo() {
       return JSON.parse(localStorage.getItem("adminInfo")) || "";
     },
-    d_id() {
-      return this.$route.query.d_id || "";
+    admin_tel() {
+      return this.$route.query.admin_tel || "";
     },
   },
   watch: {
@@ -213,7 +218,10 @@ export default {
   },
   methods: {
     // 获取所有管理员信息
-    getAllAdminInfo() {
+    getAllAdminInfo(type) {
+      if (type) {
+        this.pageInfo.pageNo = 1;
+      }
       let params = {
         pageNo: this.pageInfo.pageNo,
         pageSize: this.pageInfo.pageSize,
@@ -227,9 +235,6 @@ export default {
           if (res && res.status == 200 && res.data) {
             this.admin_tableData = res.data.adminInfoList;
             this.pageInfo.totalSize = res.data.length;
-            if (this.admin_search.admin_type == 0) {
-              this.admin_index = this.admin_tableData.length;
-            }
           }
         })
         .catch((e) => {
@@ -351,7 +356,7 @@ export default {
       let params = {
         admin_name,
         admin_pass,
-        admin_tel: 20000 + this.admin_index,
+        admin_tel: 20000 + this.pageInfo.totalSize,
         admin_type: 2,
       };
       this.$http

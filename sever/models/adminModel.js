@@ -119,9 +119,16 @@ module.exports = {
     ]);
   },
 
+  // 修改问题状态
+  updateProblemStatus(status, remarks, help_id) {
+    return db.query(
+      "update help set status = ?, remarks = ? where help_id = ?",
+      [status, remarks, help_id]
+    );
+  },
+
   // 删除回复（修改回复列表）
   deleteReplyById(reply_list, reply_id) {
-    console.log(reply_list, reply_id);
     return db.query("update reply set reply_list = ? where reply_id = ?", [
       reply_list,
       reply_id,
@@ -191,7 +198,24 @@ module.exports = {
     }order by create_time ASC`;
     return db.query(dbStr);
   },
-  getHandleProblemLengthByAdminTel(admin_tel) {
-    let dbStr = `SELECT * from help where help_fk_adminTel = ${admin_tel}`;
+
+  // 获取所有问题信息
+  getAllProblemInfo(pageNo, pageSize, status, help_fk_adminName) {
+    let dbStr = `select * from help where help_fk_adminName like ${
+      help_fk_adminName ? `'%${help_fk_adminName}%'` : "'%'"
+    }and status like ${
+      status ? `'%${status}%'` : "'%'"
+    }order by create_time ASC limit ${(pageNo - 1) * pageSize},${pageSize};`;
+    return db.query(dbStr);
+  },
+
+  // 获取所有问题信息
+  getAllProblemInfoLength(status, help_fk_adminName) {
+    let dbStr = `select * from help where help_fk_adminName like ${
+      help_fk_adminName ? `'%${help_fk_adminName}%'` : "'%'"
+    }and status like ${
+      status ? `'%${status}%'` : "'%'"
+    }order by create_time ASC`;
+    return db.query(dbStr);
   },
 };

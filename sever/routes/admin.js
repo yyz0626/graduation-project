@@ -23,6 +23,9 @@ router.post("/getAllCommentInfo", verifyToken, controller.getAllCommentInfo);
 // 获取所有管理员信息
 router.post("/getAllAdminInfo", verifyToken, controller.getAllAdminInfo);
 
+// 获取所有问题信息
+router.post("/getAllProblemInfo", verifyToken, controller.getAllProblemInfo);
+
 // 修改用户状态
 router.post("/updateUserStatus", verifyToken, controller.updateUserStatus);
 
@@ -42,6 +45,13 @@ router.post(
 
 // 修改管理员状态
 router.post("/updateAdminStatus", verifyToken, controller.updateAdminStatus);
+
+// 修改问题状态
+router.post(
+  "/updateProblemStatus",
+  verifyToken,
+  controller.updateProblemStatus
+);
 
 // 删除回复（修改回复列表）
 router.post("/deleteReplyById", verifyToken, controller.deleteReplyById);

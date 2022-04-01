@@ -28,7 +28,9 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" round @click="getAllUserInfo">查找</el-button>
+        <el-button type="primary" round @click="getAllUserInfo(1)"
+          >查找</el-button
+        >
         <el-button type="primary" round @click="reset">重置</el-button>
       </el-form-item>
     </el-form>
@@ -254,7 +256,10 @@ export default {
   watch: {},
   methods: {
     // 获取所有用户信息
-    getAllUserInfo() {
+    getAllUserInfo(type) {
+      if (type) {
+        this.pageInfo.pageNo = 1;
+      }
       let params = {
         pageNo: this.pageInfo.pageNo,
         pageSize: this.pageInfo.pageSize,
@@ -320,6 +325,7 @@ export default {
       this.detailDialogVisible = false;
       this.manageDialogVisible = false;
     },
+
     // 详情
     async detail(data) {
       this.userInfo = JSON.parse(JSON.stringify(data));
@@ -442,6 +448,7 @@ export default {
 <style lang="scss" scoped>
 .container {
   width: 1280px;
+  margin: 40px 59px 10px;
   margin: 10px 19px;
   padding-bottom: 60px;
   a {

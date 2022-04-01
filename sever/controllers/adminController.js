@@ -142,6 +142,23 @@ module.exports = {
     };
   },
 
+  // 获取所有问题信息
+  async getAllProblemInfo(ctx) {
+    let { pageNo, pageSize, status, help_fk_adminName } = ctx.request.body;
+    let results = await model.getAllProblemInfo(
+      pageNo,
+      pageSize,
+      status,
+      help_fk_adminName
+    );
+    let length = await model.getAllProblemInfoLength(status, help_fk_adminName);
+    ctx.body = {
+      adminInfoList: results,
+      length: length.length,
+      pageNo: pageNo,
+    };
+  },
+
   // 修改用户状态
   async updateUserStatus(ctx) {
     let { u_status, u_id } = ctx.request.body;
@@ -179,6 +196,17 @@ module.exports = {
   async updateAdminStatus(ctx) {
     let { admin_type, admin_id } = ctx.request.body;
     let results = await model.updateAdminStatus(admin_type, admin_id);
+    if (results.insertId >= 0) {
+      ctx.body = {
+        results: results,
+      };
+    }
+  },
+
+  // 修改问题状态
+  async updateProblemStatus(ctx) {
+    let { status, remarks, help_id } = ctx.request.body;
+    let results = await model.updateProblemStatus(status, remarks, help_id);
     if (results.insertId >= 0) {
       ctx.body = {
         results: results,

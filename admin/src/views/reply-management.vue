@@ -179,7 +179,10 @@ export default {
   },
   methods: {
     // 获取所有评论信息
-    getAllCommentInfo() {
+    getAllCommentInfo(type) {
+      if (type) {
+        this.pageInfo.pageNo = 1;
+      }
       if (this.comment_search.c_status == 1) {
         this.isShowDeleteLine = true;
       } else {

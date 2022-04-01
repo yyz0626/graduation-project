@@ -33,19 +33,19 @@ router.beforeEach((to, from, next) => {
   } else {
     next();
   }
-  /*如果本地 存在 token 则 不允许直接跳转到 登录页面*/
-  if (to.fullPath == "/login") {
-    if (
-      localStorage.getItem("admin_token") &&
-      localStorage.getItem("admin_info")
-    ) {
-      next({
-        path: from.fullPath,
-      });
-    } else {
-      next();
-    }
-  }
+  // /*如果本地 存在 token 则 不允许直接跳转到 登录页面*/
+  // if (to.fullPath == "/login") {
+  //   if (
+  //     localStorage.getItem("admin_token") &&
+  //     localStorage.getItem("admin_info")
+  //   ) {
+  //     next({
+  //       path: from.fullPath,
+  //     });
+  //   } else {
+  //     next();
+  //   }
+  // }
 });
 
 Vue.config.productionTip = false;

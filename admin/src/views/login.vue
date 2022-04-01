@@ -96,9 +96,7 @@ export default {
       this.$http
         .post("/admin/adminLogin", this.loginForm)
         .then((res) => {
-          // console.log(res);
-          if (res && res.status == 200) {
-            console.log(res);
+          if (res && res.status == 200 && res.data.admin_token) {
             let { admin_token, admin_info } = res.data;
             // //存token
             this.$store.dispatch("SET_ADMIN_TOKEN", admin_token);
@@ -106,19 +104,16 @@ export default {
               "SET_ADMIN_INFO",
               JSON.stringify(admin_info[0])
             );
+            this.$message({
+              message: "登录成功",
+              type: "success",
+            });
             this.$router.push("/");
-            // this.$message({
-            //   message: "登录成功",
-            //   type: "success",
-            // });
-            // setTimeout(() => {
-            //   this.registVisible = false;
-            // }, 3000);
           } else {
             this.$message.error("密码错误,请重试！");
             this.loginForm = {
-              u_tel: "",
-              u_pass: "",
+              admin_tel: "",
+              admin_pass: "",
             };
           }
         })
