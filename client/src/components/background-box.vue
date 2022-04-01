@@ -2,7 +2,7 @@
   <div class="background" :style="styleObject">
     <span class="title" :title="bgData.d_title">{{ bgData.d_title }}</span>
     <span class="detail"
-      >{{ bgData.d_fk_uid }} ·
+      >{{ bgData.d_fk_uName }} ·
       {{ $moment(bgData.createTime).format("YYYY-MM-DD HH:mm") }} ·
       {{ checkTextType(bgData.d_type) }}</span
     >
