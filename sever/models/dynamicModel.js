@@ -3,7 +3,9 @@ const db = require("./db");
 module.exports = {
   // 查询全部动态列表
   getDynamicList() {
-    return db.query("SELECT * from dynamic ORDER BY createTime DESC");
+    return db.query(
+      "SELECT * from dynamic WHERE d_status < 3 ORDER BY d_status DESC,createTime DESC"
+    );
   },
 
   // 查询用户发布动态列表
@@ -13,7 +15,10 @@ module.exports = {
 
   // 根据type类型查询全部动态列表
   getDynamicListByType(d_type) {
-    return db.query("select * from dynamic where d_type = ?", [d_type]);
+    return db.query(
+      "select * from dynamic where d_type = ? and d_status < 3 ORDER BY d_status DESC,createTime DESC",
+      [d_type]
+    );
   },
 
   // 发布动态

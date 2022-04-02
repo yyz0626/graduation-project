@@ -120,10 +120,16 @@ module.exports = {
   },
 
   // 修改问题状态
-  updateProblemStatus(status, remarks, help_id) {
+  updateProblemStatus(
+    status,
+    remarks,
+    help_id,
+    help_fk_adminName,
+    help_fk_adminTel
+  ) {
     return db.query(
-      "update help set status = ?, remarks = ? where help_id = ?",
-      [status, remarks, help_id]
+      "update help set status = ?, remarks = ?,help_fk_adminName = ?, help_fk_adminTel = ? where help_id = ?",
+      [status, remarks, help_fk_adminName, help_fk_adminTel, help_id]
     );
   },
 

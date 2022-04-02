@@ -30,9 +30,15 @@
             prop="help_detail"
             label="反馈内容"
             align="center"
+            width="130"
             :show-overflow-tooltip="true"
           />
-          <el-table-column prop="create_time" label="反馈时间" align="center">
+          <el-table-column
+            prop="create_time"
+            label="反馈时间"
+            width="140"
+            align="center"
+          >
             <template slot-scope="scope">
               {{ $moment(scope.create_time).format("lll") }}
             </template>
@@ -40,25 +46,24 @@
           <el-table-column
             prop="d_content"
             label="处理结果"
-            width="150"
+            width="100"
             align="center"
           >
             <template slot-scope="scope">
               {{ helpResults(scope.row) }}
             </template>
           </el-table-column>
-          <el-table-column
-            prop="d_content"
-            label="详情信息"
-            align="center"
-            width="380"
-          >
+          <el-table-column prop="d_content" label="详情信息" align="center">
             <template slot-scope="scope">
               <div v-if="scope.row.status == 1">
                 <p>
                   处理时间：{{ $moment(scope.row.update_time).format("lll") }}
                 </p>
-                <p>处理人：{{ scope.row.help_fk_adminName }}</p>
+                <p>
+                  处理人：{{ scope.row.help_fk_adminName }}({{
+                    scope.row.help_fk_adminTel
+                  }}})
+                </p>
                 <p>备注：{{ scope.row.remarks }}</p>
               </div>
               <div v-else>-</div>
@@ -85,7 +90,7 @@
 export default {
   data() {
     return {
-      activeName: "history",
+      activeName: "help",
       help_detail: "",
       help_info_list: [],
     };

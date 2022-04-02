@@ -195,10 +195,10 @@ export default {
   },
   computed: {
     adminToken() {
-      return localStorage.getItem("adminToken") || "";
+      return localStorage.getItem("admin_token") || "";
     },
     adminInfo() {
-      return JSON.parse(localStorage.getItem("adminInfo")) || "";
+      return JSON.parse(localStorage.getItem("admin_info")) || "";
     },
   },
   watch: {},
@@ -237,6 +237,8 @@ export default {
         status: 1,
         remarks: this.remarks,
         help_id: this.problem_info.help_id,
+        help_fk_adminName: this.adminInfo.admin_name,
+        help_fk_adminTel: this.adminInfo.admin_tel,
       };
       console.log(params);
       this.$http

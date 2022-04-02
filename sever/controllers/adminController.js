@@ -205,8 +205,15 @@ module.exports = {
 
   // 修改问题状态
   async updateProblemStatus(ctx) {
-    let { status, remarks, help_id } = ctx.request.body;
-    let results = await model.updateProblemStatus(status, remarks, help_id);
+    let { status, remarks, help_id, help_fk_adminName, help_fk_adminTel } =
+      ctx.request.body;
+    let results = await model.updateProblemStatus(
+      status,
+      remarks,
+      help_id,
+      help_fk_adminName,
+      help_fk_adminTel
+    );
     if (results.insertId >= 0) {
       ctx.body = {
         results: results,

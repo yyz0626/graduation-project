@@ -203,6 +203,10 @@ export default {
         .post("/dynamic/getDynamicDetailById", params)
         .then((res) => {
           if (res && res.status == 200 && res.data) {
+            if (res.data.dynamicList[0].d_status == 3) {
+              location.href = "/404";
+              return;
+            }
             this.d_detail = res.data.dynamicList[0];
             this.last_dynamic = res.data.lastDynamic[0];
             this.next_dynamic = res.data.nextDynamic[0];
