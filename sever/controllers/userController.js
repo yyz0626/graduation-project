@@ -6,7 +6,7 @@ module.exports = {
   async userLogin(ctx) {
     let { u_tel, u_pass } = ctx.request.body;
     let results = await model.userLogin(u_tel, u_pass);
-    if (results.length > 0) {
+    if (results[0] && results[0].u_status != 5) {
       let payload = {
         myToken: "myToken",
       };
@@ -15,14 +15,15 @@ module.exports = {
         userInfo: results,
         token: token,
       };
+    } else if (!results[0]) {
+      ctx.body = {
+        message: "密码错误",
+      };
     } else {
       ctx.body = {
-        userInfo: results,
+        message: "已注销",
       };
     }
-    // } else {
-    //     ctx.body = 'fail'
-    // }
   },
 
   // 用户注册
