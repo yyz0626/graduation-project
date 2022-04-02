@@ -36,7 +36,7 @@ export default {
       this.$http
         .get("/dynamic/getDynamicList")
         .then((res) => {
-          if (res && res.status == 200) {
+          if (res.status == 200 && res.data.dynamicList) {
             this.dynamicList = res.data.dynamicList;
             this.dialogFormVisible = false;
             this.dynamic = {

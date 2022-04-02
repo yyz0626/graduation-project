@@ -241,7 +241,26 @@ export default {
     },
 
     // 发表评论
-    publishComment() {
+    async publishComment() {
+      // 判断用户权限
+      let param = {
+        u_id: this.userInfo.u_id,
+      };
+      const res = await this.$http.post("/user/getUserInfoById", param);
+      // .then((res) => {
+      if (res.status == 200 && res.data.userInfo[0]) {
+        let userInfo = res.data.userInfo[0];
+        this.$store.dispatch("SET_USERINFO", JSON.stringify(userInfo));
+        if (userInfo.u_status == 3 || userInfo.u_status == 4) {
+          this.$message({
+            showClose: true,
+            message: "您已被禁止发布评论，请先与管理员取得联系。",
+            type: "warning",
+          });
+          return;
+        }
+      }
+      // 为空判断
       if (!this.content_val) {
         this.$message({
           showClose: true,
@@ -294,6 +313,7 @@ export default {
 
     // 回复评论
     replyComment() {
+      // 为空判断
       if (!this.content_diglog_val) {
         this.$message({
           showClose: true,

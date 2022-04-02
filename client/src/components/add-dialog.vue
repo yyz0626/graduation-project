@@ -72,7 +72,7 @@
           </el-upload>
         </el-form-item>
 
-        <el-form-item style="margin-left: 260px">
+        <el-form-item style="margin: 0 130px">
           <el-button type="primary" @click="submitForm('dynamic')"
             >立即发布</el-button
           >
@@ -141,7 +141,8 @@ export default {
     },
   },
   methods: {
-    openDialog() {
+    async openDialog() {
+      // 判断登陆状态
       if (!this.token) {
         this.$message({
           showClose: true,
@@ -150,7 +151,25 @@ export default {
         });
         return;
       }
-      this.dialogFormVisible = true;
+      // 判断用户权限
+      let param = {
+        u_id: this.userInfo.u_id,
+      };
+      const res = await this.$http.post("/user/getUserInfoById", param);
+      if (res.status == 200 && res.data.userInfo[0]) {
+        let userInfo = res.data.userInfo[0];
+        this.$store.dispatch("SET_USERINFO", JSON.stringify(userInfo));
+        if (userInfo.u_status == 2 || userInfo.u_status == 4) {
+          this.$message({
+            showClose: true,
+            message: "您已被禁止发布动态，请先与管理员取得联系。",
+            type: "warning",
+          });
+          return;
+        } else {
+          this.dialogFormVisible = true;
+        }
+      }
     },
     // 发布动态
     publishDynamic() {
