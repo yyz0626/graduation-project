@@ -353,6 +353,8 @@ export default {
       let params = {
         u_status: this.userInfo.u_status,
         u_id: this.userInfo.u_id,
+        u_fk_adminId: this.adminInfo.admin_tel,
+        u_fk_adminName: this.adminInfo.admin_name,
       };
       this.$http
         .post("/admin/updateUserStatus", params)
@@ -384,6 +386,8 @@ export default {
           let params = {
             u_status: 5,
             u_id: this.userInfo.u_id,
+            u_fk_adminId: this.adminInfo.admin_tel,
+            u_fk_adminName: this.adminInfo.admin_name,
           };
           this.$http
             .post("/admin/updateUserStatus", params)
@@ -417,6 +421,8 @@ export default {
           let params = {
             u_status: 1,
             u_id: this.userInfo.u_id,
+            u_fk_adminId: this.adminInfo.admin_tel,
+            u_fk_adminName: this.adminInfo.admin_name,
           };
           this.$http
             .post("/admin/updateUserStatus", params)

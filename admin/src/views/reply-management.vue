@@ -168,10 +168,10 @@ export default {
   },
   computed: {
     adminToken() {
-      return localStorage.getItem("adminToken") || "";
+      return localStorage.getItem("admin_token") || "";
     },
     adminInfo() {
-      return JSON.parse(localStorage.getItem("adminInfo")) || "";
+      return JSON.parse(localStorage.getItem("admin_info")) || "";
     },
     d_id() {
       return this.$route.query.d_id || "";
@@ -260,8 +260,8 @@ export default {
         this.comment_info = JSON.parse(
           JSON.stringify(this.comment_tableData[x].reply_list)
         );
-        this.comment_info.splice(y, 1);
-        let str = JSON.stringify(this.comment_info);
+        let deleteObj = this.comment_info.splice(y, 1);
+        let str = JSON.stringify(deleteObj);
         this.deleteReplyById(str, reply_id);
       }
     },
@@ -273,6 +273,8 @@ export default {
           let params = {
             c_status: 2,
             c_id: data.c_id,
+            new_val: `管理员:${this.adminInfo.admin_name}(${this.adminInfo.admin_tel}),删除了动态id:${data.c_fk_dId}的评论:"${data.c_content}",评论人:${data.info_name}(${data.info_fk_uId})`,
+            log_type: "3-1",
           };
           this.$http
             .post("/admin/updateCommentStatus", params)
@@ -301,9 +303,12 @@ export default {
     deleteReplyById(data, reply_id) {
       this.$confirm("确定删除该回复？")
         .then(() => {
+          let obj = JSON.parse(data)[0];
           let params = {
-            reply_list: data,
+            reply_list: JSON.stringify(this.comment_info),
             reply_id: reply_id,
+            new_val: `管理员:${this.adminInfo.admin_name}(${this.adminInfo.admin_tel}),删除了动态id:${obj.d_id}中:${obj.from_uName}(${obj.from_uId})给${obj.to_uName}(${obj.to_uId})的回复"${obj.c_content}"`,
+            log_type: "3-2",
           };
           this.$http
             .post("/admin/deleteReplyById", params)

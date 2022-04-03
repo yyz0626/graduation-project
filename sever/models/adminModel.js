@@ -88,19 +88,19 @@ module.exports = {
   },
 
   // 修改用户状态
-  updateUserStatus(u_status, u_id) {
-    return db.query("update users set u_status = ? where u_id = ?", [
-      u_status,
-      u_id,
-    ]);
+  updateUserStatus(u_status, u_id, u_fk_adminId, u_fk_adminName) {
+    return db.query(
+      "update users set u_status = ?,u_fk_adminId = ?, u_fk_adminName = ? where u_id = ?",
+      [u_status, u_fk_adminId, u_fk_adminName, u_id]
+    );
   },
 
   // 修改动态状态
-  updateDynamicStatus(d_status, d_id) {
-    return db.query("update dynamic set d_status = ? where d_id = ?", [
-      d_status,
-      d_id,
-    ]);
+  updateDynamicStatus(d_status, d_id, d_fk_adminId, d_fk_adminName) {
+    return db.query(
+      "update dynamic set d_status = ?,d_fk_adminId = ?, d_fk_adminName = ?  where d_id = ?",
+      [d_status, d_fk_adminId, d_fk_adminName, d_id]
+    );
   },
 
   // 修改评论状态
@@ -223,5 +223,9 @@ module.exports = {
       status ? `'%${status}%'` : "'%'"
     }order by create_time ASC`;
     return db.query(dbStr);
+  },
+
+  insertLog(new_val) {
+    return db.query("insert into log set ?", new_val);
   },
 };

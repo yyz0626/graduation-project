@@ -161,8 +161,13 @@ module.exports = {
 
   // 修改用户状态
   async updateUserStatus(ctx) {
-    let { u_status, u_id } = ctx.request.body;
-    let results = await model.updateUserStatus(u_status, u_id);
+    let { u_status, u_id, u_fk_adminId, u_fk_adminName } = ctx.request.body;
+    let results = await model.updateUserStatus(
+      u_status,
+      u_id,
+      u_fk_adminId,
+      u_fk_adminName
+    );
     if (results.insertId >= 0) {
       ctx.body = {
         results: results,
@@ -172,8 +177,13 @@ module.exports = {
 
   // 修改动态状态
   async updateDynamicStatus(ctx) {
-    let { d_status, d_id } = ctx.request.body;
-    let results = await model.updateDynamicStatus(d_status, d_id);
+    let { d_status, d_id, d_fk_adminId, d_fk_adminName } = ctx.request.body;
+    let results = await model.updateDynamicStatus(
+      d_status,
+      d_id,
+      d_fk_adminId,
+      d_fk_adminName
+    );
     if (results.insertId >= 0) {
       ctx.body = {
         results: results,
@@ -183,8 +193,9 @@ module.exports = {
 
   // 修改评论状态
   async updateCommentStatus(ctx) {
-    let { c_status, c_id } = ctx.request.body;
+    let { c_status, c_id, new_val, log_type } = ctx.request.body;
     let results = await model.updateCommentStatus(c_status, c_id);
+    await model.insertLog({ new_val, log_type });
     if (results.insertId >= 0) {
       ctx.body = {
         results: results,
@@ -223,8 +234,9 @@ module.exports = {
 
   // 删除回复（修改回复列表）
   async deleteReplyById(ctx) {
-    let { reply_list, reply_id } = ctx.request.body;
+    let { reply_list, reply_id, new_val, log_type } = ctx.request.body;
     let results = await model.deleteReplyById(reply_list, reply_id);
+    await model.insertLog({ new_val, log_type });
     if (results.insertId >= 0) {
       ctx.body = {
         results: results,

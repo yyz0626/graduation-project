@@ -37,14 +37,26 @@
       <el-table-column fixed="right" label="操作" width="180" align="center">
         <template slot-scope="scope">
           <router-link
+            v-if="scope.row.d_status != 3"
             target="_blank"
             :to="{ path: 'detail', query: { d_id: scope.row.d_id } }"
             >查看
           </router-link>
-          <el-button @click="edit(scope.row)" type="text" size="small"
+          <el-button
+            v-if="scope.row.d_status != 3"
+            @click="edit(scope.row)"
+            type="text"
+            size="small"
             >修改</el-button
           >
-          <el-button type="text" size="small" @click="deleteDynamic(scope.row)"
+          <p v-if="scope.row.d_status == 3" style="color: red">
+            该动态已被管理员暂停展示！
+          </p>
+          <el-button
+            type="text"
+            size="small"
+            @click="deleteDynamic(scope.row)"
+            v-if="scope.row.d_status != 3"
             >删除</el-button
           >
         </template>
@@ -56,7 +68,6 @@
       :before-close="handleClose"
       :visible.sync="dialogVisible"
     >
-      <!-- <pre>{{ dynamicInfo }}</pre> -->
       <el-form
         :model="dynamic"
         status-icon
@@ -70,32 +81,16 @@
           <el-input v-model="dynamic.d_title" placeholder="请输入动态标题" />
         </el-form-item>
         <el-form-item label="动态类型" prop="d_type">
-          <el-select v-model="dynamic.d_type" placeholder="请选择动态类型">
+          <el-select
+            v-model="dynamic.d_type"
+            placeholder="请选择动态类型"
+            :disabled="true"
+          >
             <el-option label="难题解答" :value="1" />
             <el-option label="交友平台" :value="2" />
             <el-option label="二手市场" :value="3" />
             <el-option label="休闲娱乐" :value="4" />
           </el-select>
-        </el-form-item>
-        <el-form-item
-          label="是否组队"
-          prop="d_group"
-          v-if="dynamic.d_type == 4"
-        >
-          <el-switch v-model="dynamic.d_group" />
-        </el-form-item>
-        <el-form-item
-          label="组队人数"
-          prop="d_groupNum"
-          v-if="dynamic.d_type == 4 && dynamic.d_group == true"
-        >
-          <el-input-number
-            v-model="dynamic.d_groupNum"
-            @change="handleChange"
-            :min="0"
-            :max="30"
-            label="描述文字"
-          />
         </el-form-item>
         <el-form-item label="动态内容" prop="d_content">
           <el-input
@@ -107,9 +102,8 @@
             show-word-limit
           />
         </el-form-item>
-        <el-form-item label="动态图片">
+        <!-- <el-form-item label="动态图片">
           <pre>{{ dynamic.d_pictures }}</pre>
-          <!-- {{dynamic}} -->
           <el-upload
             class="upload-demo"
             :action="domain"
@@ -121,9 +115,9 @@
           >
             <el-button size="small" type="primary">点击上传</el-button>
           </el-upload>
-        </el-form-item>
+        </el-form-item> -->
 
-        <el-form-item style="margin-left: 260px">
+        <el-form-item style="margin: 0 130px">
           <el-button type="primary" @click="submitForm('dynamic')"
             >确定修改</el-button
           >

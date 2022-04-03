@@ -351,6 +351,8 @@ export default {
       let params = {
         d_status: this.dynamicInfo.d_status,
         d_id: this.dynamicInfo.d_id,
+        d_fk_adminId: this.adminInfo.admin_tel,
+        d_fk_adminName: this.adminInfo.admin_name,
       };
       this.$http
         .post("/admin/updateDynamicStatus", params)
@@ -382,6 +384,8 @@ export default {
           let params = {
             d_status: 3,
             d_id: this.dynamicInfo.d_id,
+            d_fk_adminId: this.adminInfo.admin_tel,
+            d_fk_adminName: this.adminInfo.admin_name,
           };
           this.$http
             .post("/admin/updateDynamicStatus", params)
@@ -407,14 +411,16 @@ export default {
         .catch(() => {});
     },
 
-    // 恢复用户操作
+    // 恢复动态操作
     recovery(data) {
       this.$confirm("确定恢复该动态状态？")
         .then(() => {
           this.dynamicInfo = JSON.parse(JSON.stringify(data));
           let params = {
-            d_status: 0,
+            d_status: 1,
             d_id: this.dynamicInfo.d_id,
+            d_fk_adminId: this.adminInfo.admin_tel,
+            d_fk_adminName: this.adminInfo.admin_name,
           };
           this.$http
             .post("/admin/updateDynamicStatus", params)
