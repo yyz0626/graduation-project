@@ -43,7 +43,7 @@
             >查看
           </router-link>
           <el-button
-            v-if="scope.row.d_status != 3"
+            v-if="scope.row.d_status != 3 && userInfo.u_id == d_fk_uId"
             @click="edit(scope.row)"
             type="text"
             size="small"
@@ -56,7 +56,7 @@
             type="text"
             size="small"
             @click="deleteDynamic(scope.row)"
-            v-if="scope.row.d_status != 3"
+            v-if="scope.row.d_status != 3 && userInfo.u_id == d_fk_uId"
             >删除</el-button
           >
         </template>

@@ -91,7 +91,12 @@
           </div>
 
           <div class="info">
-            <p class="name">{{ item.info_name }}</p>
+            <router-link
+              target="_blank"
+              :to="{ path: 'personal', query: { u_id: item.info_fk_uId } }"
+            >
+              <p class="name">{{ item.info_name }}</p>
+            </router-link>
             <p class="time">
               {{ $moment(item.create_time).format("lll") }}
             </p>
@@ -114,7 +119,13 @@
                 <img :src="reply.info_avatar" />
               </div>
               <div class="reply-list-item-right">
-                <p class="name">{{ reply.from_uName }}</p>
+                <router-link
+                  target="_blank"
+                  :to="{ path: 'personal', query: { u_id: reply.from_uId } }"
+                >
+                  <p class="name">{{ reply.from_uName }}</p>
+                </router-link>
+
                 <p class="time">
                   {{ $moment(reply.create_time).format("lll") }}
                 </p>
@@ -277,7 +288,7 @@ export default {
         from_uId: userInfo.u_id || "",
         c_content: this.content_val,
         c_fk_dId: this.d_id || "",
-        new_val: `用户：${userInfo.u_name}(${userInfo.u_id})在动态${this.d_detail.d_title}(${this.d_detail.d_id})下发表评论："${this.content_val}"`,
+        new_val: `用户：${userInfo.u_name}(${userInfo.u_id})在动态："${this.d_detail.d_title}(${this.d_detail.d_id})"下，发表评论："${this.content_val}"`,
         log_type: "3-3",
       };
       this.$http
@@ -316,7 +327,24 @@ export default {
     },
 
     // 回复评论
-    replyComment() {
+    async replyComment() {
+      // 判断用户权限
+      let param = {
+        u_id: this.userInfo.u_id,
+      };
+      const res = await this.$http.post("/user/getUserInfoById", param);
+      if (res.status == 200 && res.data.userInfo[0]) {
+        let userInfo = res.data.userInfo[0];
+        this.$store.dispatch("SET_USERINFO", JSON.stringify(userInfo));
+        if (userInfo.u_status == 3 || userInfo.u_status == 4) {
+          this.$message({
+            showClose: true,
+            message: "您已被禁止发布评论，请先与管理员取得联系。",
+            type: "warning",
+          });
+          return;
+        }
+      }
       // 为空判断
       if (!this.content_diglog_val) {
         this.$message({
@@ -350,7 +378,7 @@ export default {
       let params = {
         reply_fk_cId: reply_info.c_id,
         reply_list: JSON.stringify(this.replyList),
-        new_val: `用户：${userInfo.u_name}(${userInfo.u_id})，在动态${this.d_detail.d_title}(${this.d_detail.d_id})的评论："${reply_info.c_content}"下回复："${this.content_diglog_val}"`,
+        new_val: `用户：${userInfo.u_name}(${userInfo.u_id})，在动态："${this.d_detail.d_title}(${this.d_detail.d_id})"的评论："${reply_info.c_content}"下，回复："${this.content_diglog_val}"`,
         log_type: "3-4",
       };
 

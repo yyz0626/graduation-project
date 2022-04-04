@@ -62,7 +62,7 @@
                 <p>
                   处理人：{{ scope.row.help_fk_adminName }}({{
                     scope.row.help_fk_adminTel
-                  }}})
+                  }})
                 </p>
                 <p>备注：{{ scope.row.remarks }}</p>
               </div>

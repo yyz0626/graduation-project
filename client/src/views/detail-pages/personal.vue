@@ -25,24 +25,34 @@
         <el-input v-model="userInfo.u_tel" :disabled="true" />
       </el-form-item>
       <el-form-item label="性别" prop="info_gender">
-        <el-radio-group v-model="userInfo.info_gender">
+        <el-radio-group
+          v-model="userInfo.info_gender"
+          :disabled="this.userInfos.u_id != this.u_id"
+        >
           <el-radio label="0">男</el-radio>
           <el-radio label="1">女</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="用户名" prop="info_name">
-        <el-input v-model="userInfo.info_name" />
+        <el-input
+          v-model="userInfo.info_name"
+          :disabled="this.userInfos.u_id != this.u_id"
+        />
       </el-form-item>
       <el-form-item label="生日" prop="info_birthday">
         <el-date-picker
           v-model="userInfo.info_birthday"
           type="date"
           placeholder="选择日期"
+          :disabled="this.userInfos.u_id != this.u_id"
         />
       </el-form-item>
 
       <el-form-item label="Email" prop="info_email">
-        <el-input v-model="userInfo.info_email" />
+        <el-input
+          v-model="userInfo.info_email"
+          :disabled="this.userInfos.u_id != this.u_id"
+        />
       </el-form-item>
       <el-form-item label="兴趣爱好" prop="u_hobby">
         <el-select
@@ -52,6 +62,7 @@
           allow-create
           default-first-option
           placeholder="请选择兴趣爱好"
+          :disabled="this.userInfos.u_id != this.u_id"
         >
           <el-option
             v-for="item in hobbyOptions"
@@ -62,9 +73,26 @@
           </el-option>
         </el-select>
       </el-form-item>
+      <!-- 查看他的动态 -->
+      <el-form-item
+        label="ta的动态"
+        prop="u_hobby"
+        v-if="this.userInfos.u_id != this.u_id"
+      >
+        <router-link
+          target="_blank"
+          :to="{ path: 'personalDynamic', query: { u_id: this.u_id } }"
+        >
+          点击查看
+        </router-link>
+      </el-form-item>
+
       <!-- 注册操作栏 -->
       <el-form-item class="form-operation">
-        <el-button type="primary" @click="submitForm('userInfo')"
+        <el-button
+          type="primary"
+          @click="submitForm('userInfo')"
+          v-if="this.userInfos.u_id == this.u_id"
           >保存</el-button
         >
       </el-form-item>
@@ -171,11 +199,7 @@ export default {
     },
   },
   created() {
-    if (this.userInfos.u_id == this.u_id) {
-      this.getUserInfoById(this.u_id);
-    } else {
-      location.href = "/404";
-    }
+    this.getUserInfoById(this.u_id);
   },
   watch: {},
   methods: {
@@ -205,6 +229,8 @@ export default {
             if (this.userInfo.info_hobby) {
               this.userInfo.info_hobby = this.userInfo.info_hobby.split(",");
             }
+          } else {
+            location.href = "/404";
           }
         })
         .catch((e) => {
@@ -300,6 +326,10 @@ export default {
   width: 830px;
   margin: 0 auto;
   padding-top: 20px;
+  a {
+    text-decoration: none;
+    color: #409eff;
+  }
 }
 .photo-uploader {
   display: inline-block;
