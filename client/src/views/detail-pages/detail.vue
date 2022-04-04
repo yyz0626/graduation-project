@@ -251,7 +251,6 @@ export default {
         u_id: this.userInfo.u_id,
       };
       const res = await this.$http.post("/user/getUserInfoById", param);
-      // .then((res) => {
       if (res.status == 200 && res.data.userInfo[0]) {
         let userInfo = res.data.userInfo[0];
         this.$store.dispatch("SET_USERINFO", JSON.stringify(userInfo));
@@ -274,11 +273,12 @@ export default {
         return;
       }
       const userInfo = this.userInfo;
-      // console.log(userInfo);
       let params = {
         from_uId: userInfo.u_id || "",
         c_content: this.content_val,
         c_fk_dId: this.d_id || "",
+        new_val: `用户：${userInfo.u_name}(${userInfo.u_id})在动态${this.d_detail.d_title}(${this.d_detail.d_id})下发表评论："${this.content_val}"`,
+        log_type: "3-3",
       };
       this.$http
         .post("/dynamic/publishComment", params)
@@ -350,6 +350,8 @@ export default {
       let params = {
         reply_fk_cId: reply_info.c_id,
         reply_list: JSON.stringify(this.replyList),
+        new_val: `用户：${userInfo.u_name}(${userInfo.u_id})，在动态${this.d_detail.d_title}(${this.d_detail.d_id})的评论："${reply_info.c_content}"下回复："${this.content_diglog_val}"`,
+        log_type: "3-4",
       };
 
       this.$http

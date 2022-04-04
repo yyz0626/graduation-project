@@ -95,7 +95,7 @@ module.exports = {
 
   // 评论查询
   getCommentsById(c_fk_dId) {
-    let dbStr = `select comment.*,users_information.info_avatar,users_information.info_fk_uId,users_information.info_name,reply.reply_list from comment,users_information,reply where comment.c_fk_dId = ${c_fk_dId} and comment.from_uId=users_information.info_fk_uId and comment.c_id=reply.reply_fk_cId order by create_time ASC`;
+    let dbStr = `select comment.*,users_information.info_avatar,users_information.info_fk_uId,users_information.info_name,reply.reply_list from comment,users_information,reply where comment.c_fk_dId = ${c_fk_dId} and comment.from_uId=users_information.info_fk_uId and comment.c_id=reply.reply_fk_cId and comment.c_status = 1 order by create_time ASC`;
     return db.query(dbStr);
   },
 

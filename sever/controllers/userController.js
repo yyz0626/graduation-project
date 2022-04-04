@@ -1,4 +1,5 @@
 const model = require("../models/userModel");
+const adminModel = require("../models/adminModel");
 const { createToken } = require("../auth");
 
 module.exports = {
@@ -7,6 +8,10 @@ module.exports = {
     let { u_tel, u_pass } = ctx.request.body;
     let results = await model.userLogin(u_tel, u_pass);
     if (results[0] && results[0].u_status != 5) {
+      await adminModel.insertLog({
+        new_val: `用户：${results[0].u_name}(${results[0].u_tel})登录校园社交网`,
+        log_type: "2-3",
+      });
       let payload = {
         myToken: "myToken",
       };
@@ -29,6 +34,7 @@ module.exports = {
   // 用户注册
   async userRegist(ctx) {
     let { u_name, u_pass, u_tel } = ctx.request.body;
+    console.log(u_name, u_pass, u_tel);
     let results = await model.userRegist({
       u_name,
       u_pass,

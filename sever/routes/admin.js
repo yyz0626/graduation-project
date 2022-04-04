@@ -5,6 +5,9 @@ const { verifyToken } = require("../auth");
 
 router.prefix("/admin");
 
+// 管理端首页获取信息
+router.get("/getIndexInfo", verifyToken, controller.getIndexInfo);
+
 // 管理员登录
 router.post("/adminLogin", controller.adminLogin);
 
@@ -25,6 +28,9 @@ router.post("/getAllAdminInfo", verifyToken, controller.getAllAdminInfo);
 
 // 获取所有问题信息
 router.post("/getAllProblemInfo", verifyToken, controller.getAllProblemInfo);
+
+// 获取所有日志信息
+router.post("/getAllLogInfo", verifyToken, controller.getAllLogInfo);
 
 // 修改用户状态
 router.post("/updateUserStatus", verifyToken, controller.updateUserStatus);
@@ -55,5 +61,8 @@ router.post(
 
 // 删除回复（修改回复列表）
 router.post("/deleteReplyById", verifyToken, controller.deleteReplyById);
+
+// 日志
+router.post("/insertLog", verifyToken, controller.insertLog);
 
 module.exports = router;

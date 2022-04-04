@@ -215,7 +215,7 @@ module.exports = {
     return db.query(dbStr);
   },
 
-  // 获取所有问题信息
+  // 获取所有问题信息长度
   getAllProblemInfoLength(status, help_fk_adminName) {
     let dbStr = `select * from help where help_fk_adminName like ${
       help_fk_adminName ? `'%${help_fk_adminName}%'` : "'%'"
@@ -225,7 +225,58 @@ module.exports = {
     return db.query(dbStr);
   },
 
+  // 获取所有日志信息
+  getAllLogInfo(pageNo, pageSize) {
+    let dbStr = `select * from log order by create_time ASC limit ${
+      (pageNo - 1) * pageSize
+    },${pageSize};`;
+    return db.query(dbStr);
+  },
+
+  // 获取所有日志信息长度
+  getAllLogInfoLength() {
+    let dbStr = `select * from log order by create_time ASC`;
+    return db.query(dbStr);
+  },
+
+  // 日志
   insertLog(new_val) {
     return db.query("insert into log set ?", new_val);
+  },
+
+  // 所有用户
+  userLength() {
+    let dbStr = `select * from users`;
+    return db.query(dbStr);
+  },
+
+  // 所有管理员
+  adminLength() {
+    let dbStr = `select * from admin`;
+    return db.query(dbStr);
+  },
+
+  // 所有动态
+  dynamicLength() {
+    let dbStr = `select * from dynamic`;
+    return db.query(dbStr);
+  },
+
+  // 24小时内发布的动态
+  dynamicLengthIn24() {
+    let dbStr = `select * from dynamic where createTime > DATE_SUB(NOW(),INTERVAL 24 hour)`;
+    return db.query(dbStr);
+  },
+
+  // 已解决问题
+  problem_handle() {
+    let dbStr = `select * from help where status = 1`;
+    return db.query(dbStr);
+  },
+
+  // 待解决问题
+  problem_unHandle() {
+    let dbStr = `select * from help where status = 2`;
+    return db.query(dbStr);
   },
 };

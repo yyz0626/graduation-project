@@ -273,7 +273,7 @@ export default {
           let params = {
             c_status: 2,
             c_id: data.c_id,
-            new_val: `管理员:${this.adminInfo.admin_name}(${this.adminInfo.admin_tel}),删除了动态id:${data.c_fk_dId}的评论:"${data.c_content}",评论人:${data.info_name}(${data.info_fk_uId})`,
+            new_val: `管理员：${this.adminInfo.admin_name}(${this.adminInfo.admin_tel})，删除动态：${data.d_title}(${data.c_fk_dId})的评论："${data.c_content}"，评论人：${data.info_name}(${data.info_fk_uId})`,
             log_type: "3-1",
           };
           this.$http
@@ -307,7 +307,7 @@ export default {
           let params = {
             reply_list: JSON.stringify(this.comment_info),
             reply_id: reply_id,
-            new_val: `管理员:${this.adminInfo.admin_name}(${this.adminInfo.admin_tel}),删除了动态id:${obj.d_id}中:${obj.from_uName}(${obj.from_uId})给${obj.to_uName}(${obj.to_uId})的回复"${obj.c_content}"`,
+            new_val: `管理员：${this.adminInfo.admin_name}(${this.adminInfo.admin_tel})，删除动态id：${obj.d_id}中：${obj.from_uName}(${obj.from_uId})给${obj.to_uName}(${obj.to_uId})的回复："${obj.c_content}"`,
             log_type: "3-2",
           };
           this.$http

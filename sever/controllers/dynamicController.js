@@ -1,5 +1,7 @@
 const model = require("../models/dynamicModel");
 
+const adminModel = require("../models/adminModel");
+
 // console.log(ctx.request.body);
 
 module.exports = {
@@ -160,14 +162,14 @@ module.exports = {
 
   // 发表评论
   async publishComment(ctx) {
-    let { c_fk_dId, from_uId, c_content } = ctx.request.body;
-
+    let { c_fk_dId, from_uId, c_content, new_val, log_type } = ctx.request.body;
     let results = await model.publishComment({
       c_fk_dId,
       from_uId,
       c_content,
     });
     if (results.insertId >= 0) {
+      await adminModel.insertLog({ new_val, log_type });
       ctx.body = {
         message: "发表成功",
       };
@@ -176,9 +178,10 @@ module.exports = {
 
   // 回复评论
   async replyComment(ctx) {
-    let { reply_list, reply_fk_cId } = ctx.request.body;
+    let { reply_list, reply_fk_cId, new_val, log_type } = ctx.request.body;
     let results = await model.replyComment(reply_list, reply_fk_cId);
     if (results.insertId >= 0) {
+      await adminModel.insertLog({ new_val, log_type });
       ctx.body = {
         message: "发表成功",
       };

@@ -2,11 +2,33 @@ const model = require("../models/adminModel");
 const { createToken } = require("../auth");
 
 module.exports = {
+  // 管理端首页获取信息
+  async getIndexInfo(ctx) {
+    let userLength = await model.userLength();
+    let adminLength = await model.adminLength();
+    let dynamicLength = await model.dynamicLength();
+    let dynamicLengthIn24 = await model.dynamicLengthIn24();
+    let problem_handle = await model.problem_handle();
+    let problem_unHandle = await model.problem_unHandle();
+    ctx.body = {
+      user_length: userLength.length,
+      admin_length: adminLength.length,
+      dynamic_length: dynamicLength.length,
+      dynamic_24_length: dynamicLengthIn24.length,
+      problem_handle_length: problem_handle.length,
+      problem_unHandle_length: problem_unHandle.length,
+    };
+  },
+
   // 管理员登录
   async adminLogin(ctx) {
     let { admin_tel, admin_pass } = ctx.request.body;
     let results = await model.adminLogin(admin_tel, admin_pass);
     if (results.length > 0) {
+      await model.insertLog({
+        new_val: `管理员:${results[0].admin_name}(${results[0].admin_tel})登录后台管理系统`,
+        log_type: "4-1",
+      });
       let payload = {
         admin_token: "admin_token",
       };
@@ -32,6 +54,10 @@ module.exports = {
       admin_type,
     });
     if (results.insertId) {
+      await model.insertLog({
+        new_val: `${admin_name}(${admin_tel})注册为管理员`,
+        log_type: "4-2",
+      });
       ctx.body = {
         message: "注册成功",
       };
@@ -159,6 +185,18 @@ module.exports = {
     };
   },
 
+  // 获取所有日志信息
+  async getAllLogInfo(ctx) {
+    let { pageNo, pageSize } = ctx.request.body;
+    let results = await model.getAllLogInfo(pageNo, pageSize);
+    let length = await model.getAllLogInfoLength();
+    ctx.body = {
+      logoInfoList: results,
+      length: length.length,
+      pageNo: pageNo,
+    };
+  },
+
   // 修改用户状态
   async updateUserStatus(ctx) {
     let { u_status, u_id, u_fk_adminId, u_fk_adminName } = ctx.request.body;
@@ -195,8 +233,8 @@ module.exports = {
   async updateCommentStatus(ctx) {
     let { c_status, c_id, new_val, log_type } = ctx.request.body;
     let results = await model.updateCommentStatus(c_status, c_id);
-    await model.insertLog({ new_val, log_type });
     if (results.insertId >= 0) {
+      await model.insertLog({ new_val, log_type });
       ctx.body = {
         results: results,
       };
@@ -236,11 +274,20 @@ module.exports = {
   async deleteReplyById(ctx) {
     let { reply_list, reply_id, new_val, log_type } = ctx.request.body;
     let results = await model.deleteReplyById(reply_list, reply_id);
-    await model.insertLog({ new_val, log_type });
     if (results.insertId >= 0) {
+      await model.insertLog({ new_val, log_type });
       ctx.body = {
         results: results,
       };
     }
+  },
+
+  // 删除回复（修改回复列表）
+  async insertLog(ctx) {
+    let { new_val, log_type } = ctx.request.body;
+    let results = await model.insertLog({ new_val, log_type });
+    ctx.body = {
+      results: results,
+    };
   },
 };
