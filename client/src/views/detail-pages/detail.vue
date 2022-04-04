@@ -16,7 +16,16 @@
         {{ d_detail.d_content }}
       </div>
 
-      <div class="pic" v-if="picList.length > 0">
+      <div
+        class="pic"
+        v-if="
+          picList.length > 0 &&
+          picList[0] != 'http://r8jcjikss.hn-bkt.clouddn.com/yyz-1.jpg' &&
+          picList[0] != 'http://r8jcjikss.hn-bkt.clouddn.com/yyz-2.jpg' &&
+          picList[0] != 'http://r8jcjikss.hn-bkt.clouddn.com/yyz-3.jpg' &&
+          picList[0] != 'http://r8jcjikss.hn-bkt.clouddn.com/yyz-4.jpg'
+        "
+      >
         <div v-for="(item, index) in picList" :key="index">
           <img :src="item" alt="" />
         </div>
