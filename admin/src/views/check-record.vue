@@ -88,7 +88,11 @@
           </div>
           <!-- 2-5 用户修改个人信息 -->
           <div v-if="scope.row.log_type == '2-5'">
-            {{ scope.row.new_val }}
+            <div
+              v-html="
+                checkUserInfo(scope.row.new_val, scope.row.old_val, scope.row)
+              "
+            />
           </div>
           <!-- 3-1 管理员删除评论 -->
           <div v-if="scope.row.log_type == '3-1'">
@@ -244,6 +248,49 @@ export default {
         3: "注销管理员",
       };
       return map[type];
+    },
+
+    // 个人信息修改
+    checkUserInfo(new_val, old_val, info) {
+      let newVal = new_val.split("$$");
+      let oldVal = old_val.split("$$");
+      let new_name = newVal[0];
+      let old_name = oldVal[0];
+      let new_email = newVal[1];
+      let old_email = oldVal[1];
+      let new_hobby = newVal[2];
+      let old_hobby = oldVal[2];
+      let new_avatar = newVal[3];
+      let old_avatar = oldVal[3];
+      let new_gender = newVal[4];
+      let old_gender = oldVal[4];
+      let new_birthday = newVal[5];
+      let old_birthday = oldVal[5];
+      let str = `用户：${info.user_name}(${info.user_id})`;
+      if (new_name != old_name) {
+        str += `<p>用户名由【${old_name}】修改为【${new_name}】</p>`;
+      }
+      if (new_email != old_email) {
+        str += `<p>邮箱由【${old_email}】修改为【${new_email}】</p>`;
+      }
+      if (new_hobby != old_hobby) {
+        str += `<p>兴趣爱好由【${old_hobby}】修改为【${new_hobby}】</p>`;
+      }
+      if (new_avatar != old_avatar) {
+        str += `<p>头像由
+        <img src="${old_avatar}" style="width: 50px; height: 50px" />
+        修改为
+        <img src="${new_avatar}" style="width: 50px; height: 50px" /></p>`;
+      }
+      if (new_gender != old_gender) {
+        str += `<p>性别由【${old_gender == 0 ? "男" : "女"}】修改为【${
+          new_gender == 0 ? "男" : "女"
+        }】</p>`;
+      }
+      if (new_birthday != old_birthday) {
+        str += `<p>生日由【${old_birthday}】修改为【${new_birthday}】</p>`;
+      }
+      return str;
     },
 
     // 改变分页大小
