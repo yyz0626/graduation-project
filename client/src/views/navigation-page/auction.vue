@@ -9,6 +9,11 @@
         <background-box :bgData="item"></background-box>
       </router-link>
     </div>
+    <el-empty
+      v-if="dynamicList.length == 0"
+      description="暂无动态"
+      :image-size="200"
+    />
   </div>
 </template>
 
