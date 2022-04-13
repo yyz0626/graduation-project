@@ -16,7 +16,16 @@
         {{ d_detail.d_content }}
       </div>
 
-      <div class="pic" v-if="picList.length > 0">
+      <div
+        class="pic"
+        v-if="
+          picList.length > 0 &&
+          picList[0] != 'http://r8jcjikss.hn-bkt.clouddn.com/yyz-1.jpg' &&
+          picList[0] != 'http://r8jcjikss.hn-bkt.clouddn.com/yyz-2.jpg' &&
+          picList[0] != 'http://r8jcjikss.hn-bkt.clouddn.com/yyz-3.jpg' &&
+          picList[0] != 'http://r8jcjikss.hn-bkt.clouddn.com/yyz-4.jpg'
+        "
+      >
         <div v-for="(item, index) in picList" :key="index">
           <img :src="item" alt="" />
         </div>
@@ -91,14 +100,17 @@
           </div>
 
           <div class="info">
-            <p class="name">{{ item.info_name }}</p>
+            <router-link
+              target="_blank"
+              :to="{ path: 'personal', query: { u_id: item.info_fk_uId } }"
+            >
+              <p class="name">{{ item.info_name }}</p>
+            </router-link>
             <p class="time">
               {{ $moment(item.create_time).format("lll") }}
             </p>
             <p class="contents">
-              <span v-if="item.to_uId" style="margin-right: 10px"
-                >@{{ item.to_uName }}</span
-              >{{ item.c_content }}
+              {{ item.c_content }}
             </p>
           </div>
           <div class="reply-button">
@@ -116,7 +128,13 @@
                 <img :src="reply.info_avatar" />
               </div>
               <div class="reply-list-item-right">
-                <p class="name">{{ reply.from_uName }}</p>
+                <router-link
+                  target="_blank"
+                  :to="{ path: 'personal', query: { u_id: reply.from_uId } }"
+                >
+                  <p class="name">{{ reply.from_uName }}</p>
+                </router-link>
+
                 <p class="time">
                   {{ $moment(reply.create_time).format("lll") }}
                 </p>
@@ -127,7 +145,9 @@
                 </p>
               </div>
               <div class="reply-buttons">
-                <el-button type="text" @click="test(item)">回复</el-button>
+                <el-button type="text" @click="reply_in_floor(reply, item)"
+                  >回复</el-button
+                >
               </div>
             </div>
           </div>
@@ -171,6 +191,7 @@ export default {
       next_dynamic: "",
       picList: "",
       reply_info: "",
+      reply_info_in_floor: "",
       // 评论对话框显示
       dialogVisible: false,
       // 评论列表
@@ -202,6 +223,10 @@ export default {
         .post("/dynamic/getDynamicDetailById", params)
         .then((res) => {
           if (res && res.status == 200 && res.data) {
+            if (res.data.dynamicList[0].d_status == 3) {
+              location.href = "/404";
+              return;
+            }
             this.d_detail = res.data.dynamicList[0];
             this.last_dynamic = res.data.lastDynamic[0];
             this.next_dynamic = res.data.nextDynamic[0];
@@ -240,7 +265,25 @@ export default {
     },
 
     // 发表评论
-    publishComment() {
+    async publishComment() {
+      // 判断用户权限
+      let param = {
+        u_id: this.userInfo.u_id,
+      };
+      const res = await this.$http.post("/user/getUserInfoById", param);
+      if (res.status == 200 && res.data.userInfo[0]) {
+        let userInfo = res.data.userInfo[0];
+        this.$store.dispatch("SET_USERINFO", JSON.stringify(userInfo));
+        if (userInfo.u_status == 3 || userInfo.u_status == 4) {
+          this.$message({
+            showClose: true,
+            message: "您已被禁止发布评论，请先与管理员取得联系。",
+            type: "warning",
+          });
+          return;
+        }
+      }
+      // 为空判断
       if (!this.content_val) {
         this.$message({
           showClose: true,
@@ -250,11 +293,12 @@ export default {
         return;
       }
       const userInfo = this.userInfo;
-      // console.log(userInfo);
       let params = {
         from_uId: userInfo.u_id || "",
         c_content: this.content_val,
         c_fk_dId: this.d_id || "",
+        new_val: `用户：${userInfo.u_name}(${userInfo.u_id})在动态："${this.d_detail.d_title}(${this.d_detail.d_id})"下，发表评论："${this.content_val}"`,
+        log_type: "3-3",
       };
       this.$http
         .post("/dynamic/publishComment", params)
@@ -279,18 +323,38 @@ export default {
         });
     },
 
-    // 评论回复按钮
+    // 每层楼评论回复按钮
     reply(item) {
       this.dialogVisible = true;
       this.reply_info = item;
     },
-    test(item) {
+
+    reply_in_floor(reply, item) {
       this.dialogVisible = true;
+      this.reply_info_in_floor = reply;
       this.reply_info = item;
     },
 
     // 回复评论
-    replyComment() {
+    async replyComment() {
+      // 判断用户权限
+      let param = {
+        u_id: this.userInfo.u_id,
+      };
+      const res = await this.$http.post("/user/getUserInfoById", param);
+      if (res.status == 200 && res.data.userInfo[0]) {
+        let userInfo = res.data.userInfo[0];
+        this.$store.dispatch("SET_USERINFO", JSON.stringify(userInfo));
+        if (userInfo.u_status == 3 || userInfo.u_status == 4) {
+          this.$message({
+            showClose: true,
+            message: "您已被禁止发布评论，请先与管理员取得联系。",
+            type: "warning",
+          });
+          return;
+        }
+      }
+      // 为空判断
       if (!this.content_diglog_val) {
         this.$message({
           showClose: true,
@@ -301,14 +365,21 @@ export default {
       }
       const userInfo = this.userInfo;
       const reply_info = this.reply_info;
+      const reply_info_in_floor = this.reply_info_in_floor;
       let obj = {
         from_uId: userInfo.u_id || "",
-        to_uId: reply_info.from_uId,
-        to_uName: reply_info.info_name,
         from_uName: userInfo.info_name,
+        to_uId: reply_info_in_floor
+          ? reply_info_in_floor.from_uId
+          : reply_info.from_uId,
+        to_uName: reply_info_in_floor
+          ? reply_info_in_floor.from_uName
+          : reply_info.info_name,
         c_content: this.content_diglog_val,
         create_time: new Date(),
         info_avatar: userInfo.info_avatar,
+        c_id: reply_info.c_id,
+        d_id: reply_info.c_fk_dId,
       };
       // console.log(userInfo, reply_info, obj);
       this.replyList = JSON.parse(reply_info.reply_list);
@@ -316,6 +387,8 @@ export default {
       let params = {
         reply_fk_cId: reply_info.c_id,
         reply_list: JSON.stringify(this.replyList),
+        new_val: `用户：${userInfo.u_name}(${userInfo.u_id})，在动态："${this.d_detail.d_title}(${this.d_detail.d_id})"的评论："${reply_info.c_content}"下，回复："${this.content_diglog_val}"`,
+        log_type: "3-4",
       };
 
       this.$http
@@ -373,6 +446,9 @@ export default {
   .pic {
     margin-top: 10px;
     text-align: center;
+    img {
+      max-width: 830px;
+    }
   }
   .edit-time {
     margin-left: 550px;

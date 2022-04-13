@@ -9,6 +9,11 @@
         <background-box :bgData="item"></background-box>
       </router-link>
     </div>
+    <el-empty
+      v-if="dynamicList.length == 0"
+      description="暂无动态"
+      :image-size="200"
+    />
   </div>
 </template>
 
@@ -34,9 +39,8 @@ export default {
       this.$http
         .post("/dynamic/getDynamicListByType", { d_type: 1 })
         .then((res) => {
-          console.log(res);
           if (res && res.status == 200) {
-            this.dynamicList = res.data.dynamicList.reverse();
+            this.dynamicList = res.data.dynamicList;
             this.dialogFormVisible = false;
             this.dynamic = {
               d_title: "",

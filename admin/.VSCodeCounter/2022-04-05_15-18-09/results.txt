@@ -1,0 +1,70 @@
+Date : 2022-04-05 15:18:09
+Directory : d:\杨易卓-毕业论文\graduation-project
+Total : 32 files,  17375 codes, 250 comments, 285 blanks, all 17910 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| JSON       |          2 |     12,669 |          0 |          2 |     12,671 |
+| Vue        |         20 |      4,355 |        192 |        244 |      4,791 |
+| JavaScript |          8 |        303 |         57 |         24 |        384 |
+| HTML       |          1 |         28 |          1 |          3 |         32 |
+| Markdown   |          1 |         20 |          0 |         12 |         32 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                             | files      | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                |         32 |     17,375 |        250 |        285 |     17,910 |
+| admin                                                                            |         32 |     17,375 |        250 |        285 |     17,910 |
+| admin\public                                                                     |          1 |         28 |          1 |          3 |         32 |
+| admin\src                                                                        |         26 |      4,632 |        245 |        265 |      5,142 |
+| admin\src\components                                                             |          5 |        485 |         37 |         26 |        548 |
+| admin\src\lib                                                                    |          1 |         59 |          0 |          0 |         59 |
+| admin\src\router                                                                 |          1 |         87 |         19 |          5 |        111 |
+| admin\src\store                                                                  |          1 |         44 |          4 |          6 |         54 |
+| admin\src\utils                                                                  |          2 |         46 |         12 |          5 |         63 |
+| admin\src\views                                                                  |         14 |      3,806 |        141 |        214 |      4,161 |
+| admin\src\views\detail-pages                                                     |          3 |      1,156 |         62 |         54 |      1,272 |
++----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                         | language   | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| d:\杨易卓-毕业论文\graduation-project\admin\README.md                                   | Markdown   |         20 |          0 |         12 |         32 |
+| d:\杨易卓-毕业论文\graduation-project\admin\babel.config.js                             | JavaScript |          5 |          0 |          1 |          6 |
+| d:\杨易卓-毕业论文\graduation-project\admin\package-lock.json                           | JSON       |     12,615 |          0 |          1 |     12,616 |
+| d:\杨易卓-毕业论文\graduation-project\admin\package.json                                | JSON       |         54 |          0 |          1 |         55 |
+| d:\杨易卓-毕业论文\graduation-project\admin\public\index.html                           | HTML       |         28 |          1 |          3 |         32 |
+| d:\杨易卓-毕业论文\graduation-project\admin\src\App.vue                                 | Vue        |         64 |         14 |          4 |         82 |
+| d:\杨易卓-毕业论文\graduation-project\admin\src\components\add-dialog.vue               | Vue        |        259 |         22 |         10 |        291 |
+| d:\杨易卓-毕业论文\graduation-project\admin\src\components\background-box.vue           | Vue        |         65 |          0 |          5 |         70 |
+| d:\杨易卓-毕业论文\graduation-project\admin\src\components\no-data.vue                  | Vue        |         11 |          0 |          3 |         14 |
+| d:\杨易卓-毕业论文\graduation-project\admin\src\components\search-box.vue               | Vue        |         56 |          8 |          4 |         68 |
+| d:\杨易卓-毕业论文\graduation-project\admin\src\components\upload.vue                   | Vue        |         94 |          7 |          4 |        105 |
+| d:\杨易卓-毕业论文\graduation-project\admin\src\lib\config.js                           | JavaScript |         59 |          0 |          0 |         59 |
+| d:\杨易卓-毕业论文\graduation-project\admin\src\main.js                                 | JavaScript |         41 |         18 |          5 |         64 |
+| d:\杨易卓-毕业论文\graduation-project\admin\src\router\index.js                         | JavaScript |         87 |         19 |          5 |        111 |
+| d:\杨易卓-毕业论文\graduation-project\admin\src\store\index.js                          | JavaScript |         44 |          4 |          6 |         54 |
+| d:\杨易卓-毕业论文\graduation-project\admin\src\utils\http.js                           | JavaScript |         37 |          5 |          5 |         47 |
+| d:\杨易卓-毕业论文\graduation-project\admin\src\utils\rem.js                            | JavaScript |          9 |          7 |          0 |         16 |
+| d:\杨易卓-毕业论文\graduation-project\admin\src\views\admin-management.vue              | Vue        |        380 |         16 |         20 |        416 |
+| d:\杨易卓-毕业论文\graduation-project\admin\src\views\check-record.vue                  | Vue        |        272 |          8 |         12 |        292 |
+| d:\杨易卓-毕业论文\graduation-project\admin\src\views\detail-pages\detail.vue           | Vue        |        487 |         23 |         31 |        541 |
+| d:\杨易卓-毕业论文\graduation-project\admin\src\views\detail-pages\personal-dynamic.vue | Vue        |        384 |         21 |         15 |        420 |
+| d:\杨易卓-毕业论文\graduation-project\admin\src\views\detail-pages\personal.vue         | Vue        |        285 |         18 |          8 |        311 |
+| d:\杨易卓-毕业论文\graduation-project\admin\src\views\dynamic-management.vue            | Vue        |        435 |         11 |         26 |        472 |
+| d:\杨易卓-毕业论文\graduation-project\admin\src\views\handle-problem.vue                | Vue        |        307 |         11 |         25 |        343 |
+| d:\杨易卓-毕业论文\graduation-project\admin\src\views\header.vue                        | Vue        |        100 |          5 |          4 |        109 |
+| d:\杨易卓-毕业论文\graduation-project\admin\src\views\index.vue                         | Vue        |        139 |          1 |          9 |        149 |
+| d:\杨易卓-毕业论文\graduation-project\admin\src\views\login.vue                         | Vue        |        146 |          5 |         10 |        161 |
+| d:\杨易卓-毕业论文\graduation-project\admin\src\views\navbar.vue                        | Vue        |         85 |          1 |          5 |         91 |
+| d:\杨易卓-毕业论文\graduation-project\admin\src\views\notFound.vue                      | Vue        |         16 |          0 |          3 |         19 |
+| d:\杨易卓-毕业论文\graduation-project\admin\src\views\reply-management.vue              | Vue        |        337 |         10 |         15 |        362 |
+| d:\杨易卓-毕业论文\graduation-project\admin\src\views\user-management.vue               | Vue        |        433 |         11 |         31 |        475 |
+| d:\杨易卓-毕业论文\graduation-project\admin\vue.config.js                               | JavaScript |         21 |          4 |          2 |         27 |
+| Total                                                                            |            |     17,375 |        250 |        285 |     17,910 |
++----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+

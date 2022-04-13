@@ -9,6 +9,11 @@ const postcss = px2rem({
 
 // 使用等比适配插件
 module.exports = {
+    devServer: {
+        host: 'localhost',   //本地
+        port: 8080,    //端口号
+        open: true   //默认false   true自动打开
+    },
     lintOnSave: true,
     css: {
         loaderOptions: {

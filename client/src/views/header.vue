@@ -79,8 +79,13 @@ export default {
     // console.log(this.$store.state);
   },
   methods: {
-    handleCommand(command) {
+    async handleCommand(command) {
       if (command == "logout") {
+        let params = {
+          new_val: `用户:${this.userInfo.u_name}(${this.userInfo.u_id})退出校园社交网`,
+          log_type: "2-4",
+        };
+        await this.$http.post("/admin/insertLog", params);
         this.$store.dispatch("LOG_OUT");
         this.$message({
           message: "退出成功",

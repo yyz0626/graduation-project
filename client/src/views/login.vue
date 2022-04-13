@@ -247,7 +247,7 @@ export default {
               this.registVisible = false;
             }, 3000);
           } else {
-            this.$message.error("发布失败");
+            this.$message.error("注册失败");
           }
         })
         .catch((e) => {
@@ -292,8 +292,7 @@ export default {
       this.$http
         .post("/user/userLogin", this.loginForm)
         .then((res) => {
-          // console.log(res);
-          if (res && res.status == 200 && res.data.userInfo.length > 0) {
+          if (res.status == 200 && res.data.userInfo) {
             let { token, userInfo } = res.data;
             //存token
             this.$store.dispatch("SET_TOKEN", token);
@@ -306,6 +305,12 @@ export default {
             setTimeout(() => {
               this.registVisible = false;
             }, 3000);
+          } else if (res.data.message == "已注销") {
+            this.$message.error("该账号已被管理员注销！");
+            this.loginForm = {
+              u_tel: "",
+              u_pass: "",
+            };
           } else {
             this.$message.error("密码错误,请重试！");
             this.loginForm = {
