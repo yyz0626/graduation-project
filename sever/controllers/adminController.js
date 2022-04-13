@@ -29,7 +29,7 @@ module.exports = {
     var md5 = crypto.createHash("md5");
     admin_pass = md5.update(admin_pass, "utf8").digest("hex"); //hex转化为十六进制
     let results = await model.adminLogin(admin_tel, admin_pass);
-    if (results.length > 0) {
+    if (results[0] && results[0].admin_type != 3) {
       await model.insertLog({
         new_val: `管理员:${results[0].admin_name}(${results[0].admin_tel})登录后台管理系统`,
         log_type: "4-1",
@@ -42,9 +42,13 @@ module.exports = {
         admin_info: results,
         admin_token: admin_token,
       };
+    } else if (!results[0]) {
+      ctx.body = {
+        message: "密码错误",
+      };
     } else {
       ctx.body = {
-        admin_info: results,
+        message: "已注销",
       };
     }
   },

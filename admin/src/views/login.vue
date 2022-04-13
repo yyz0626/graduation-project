@@ -109,6 +109,12 @@ export default {
               type: "success",
             });
             this.$router.push("/");
+          } else if (res.data.message == "已注销") {
+            this.$message.error("该账号已被管理员注销！");
+            this.loginForm = {
+              admin_tel: "",
+              admin_pass: "",
+            };
           } else {
             this.$message.error("密码错误,请重试！");
             this.loginForm = {
