@@ -1,6 +1,8 @@
 const model = require("../models/adminModel");
 const { createToken } = require("../auth");
 
+const crypto = require("crypto"); //引入crypto模块
+
 module.exports = {
   // 管理端首页获取信息
   async getIndexInfo(ctx) {
@@ -23,6 +25,9 @@ module.exports = {
   // 管理员登录
   async adminLogin(ctx) {
     let { admin_tel, admin_pass } = ctx.request.body;
+    // md5加密
+    var md5 = crypto.createHash("md5");
+    admin_pass = md5.update(admin_pass, "utf8").digest("hex"); //hex转化为十六进制
     let results = await model.adminLogin(admin_tel, admin_pass);
     if (results.length > 0) {
       await model.insertLog({

@@ -2,10 +2,15 @@ const model = require("../models/userModel");
 const adminModel = require("../models/adminModel");
 const { createToken } = require("../auth");
 
+const crypto = require("crypto"); //引入crypto模块
+
 module.exports = {
   // 用户登录
   async userLogin(ctx) {
     let { u_tel, u_pass } = ctx.request.body;
+    // md5加密
+    var md5 = crypto.createHash("md5");
+    u_pass = md5.update(u_pass, "utf8").digest("hex"); //hex转化为十六进制
     let results = await model.userLogin(u_tel, u_pass);
     if (results[0] && results[0].u_status != 5) {
       await adminModel.insertLog({
