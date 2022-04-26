@@ -16,12 +16,16 @@
           :action="domain"
           :http-request="upqiniu"
           :before-upload="beforeUpload"
+          v-if="this.userInfos.u_id == this.u_id"
         >
           <el-avatar :size="100" :src="userInfo.info_avatar" />
         </el-upload>
+        <div v-else>
+          <el-avatar :size="100" :src="userInfo.info_avatar" />
+        </div>
       </el-form-item>
 
-      <el-form-item label="联系电话">
+      <el-form-item label="联系电话" v-if="this.userInfos.u_id == this.u_id">
         <el-input v-model="userInfo.u_tel" :disabled="true" />
       </el-form-item>
       <el-form-item label="性别" prop="info_gender">
@@ -39,7 +43,11 @@
           :disabled="this.userInfos.u_id != this.u_id"
         />
       </el-form-item>
-      <el-form-item label="生日" prop="info_birthday">
+      <el-form-item
+        label="生日"
+        prop="info_birthday"
+        v-if="this.userInfos.u_id == this.u_id"
+      >
         <el-date-picker
           v-model="userInfo.info_birthday"
           type="date"
@@ -48,7 +56,11 @@
         />
       </el-form-item>
 
-      <el-form-item label="Email" prop="info_email">
+      <el-form-item
+        label="Email"
+        prop="info_email"
+        v-if="this.userInfos.u_id == this.u_id"
+      >
         <el-input
           v-model="userInfo.info_email"
           :disabled="this.userInfos.u_id != this.u_id"

@@ -11,29 +11,29 @@
     <div class="admin-detail">
       <div class="detail-item item-left">
         <p>
-          用户总数<span>{{ info.user_length }}</span
+          用户总数<span>{{ info.user_length || "x" }}</span
           >个
         </p>
         <p>
-          今日发布<span>{{ info.dynamic_24_length }}</span
+          今日发布<span>{{ info.dynamic_24_length || "x" }}</span
           >条动态
         </p>
         <p>
-          待处理<span>{{ info.problem_unHandle_length }}</span
+          待处理<span>{{ info.problem_unHandle_length || "x" }}</span
           >个问题
         </p>
       </div>
       <div class="detail-item">
         <p>
-          管理员总数<span>{{ info.admin_length }}</span
+          管理员总数<span>{{ info.admin_length || "x" }}</span
           >个
         </p>
         <p>
-          历史发布<span>{{ info.dynamic_length }}</span
+          历史发布<span>{{ info.dynamic_length || "x" }}</span
           >条动态
         </p>
         <p>
-          已处理<span>{{ info.problem_handle_length }}</span
+          已处理<span>{{ info.problem_handle_length || "x" }}</span
           >个问题
         </p>
       </div>
