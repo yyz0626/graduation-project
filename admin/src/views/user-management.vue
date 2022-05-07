@@ -184,7 +184,7 @@
             <el-option label="禁止发布、评论动态" :value="4" />
           </el-select>
         </el-form-item>
-        <el-form-item style="margin-left: 55px; margin-top: 100px">
+        <el-form-item style="margin-left: 55px; margin-top: 250px">
           <el-button type="primary" @click="updateUserStatus">确定</el-button>
           <el-button @click="closeForm">取消</el-button>
         </el-form-item>

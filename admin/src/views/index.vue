@@ -15,7 +15,7 @@
           >个
         </p>
         <p>
-          今日发布<span>{{ info.dynamic_24_length || "x" }}</span
+          今日发布<span>{{ info.dynamic_24_length }}</span
           >条动态
         </p>
         <p>

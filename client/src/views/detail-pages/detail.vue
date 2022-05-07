@@ -100,12 +100,13 @@
           </div>
 
           <div class="info">
-            <router-link
-              target="_blank"
-              :to="{ path: 'personal', query: { u_id: item.info_fk_uId } }"
+            <el-button
+              type="text"
+              @click="toPersonalDetail(item.info_fk_uId)"
+              style="padding-top: 0px; padding-bottom: 0px"
             >
-              <p class="name">{{ item.info_name }}</p>
-            </router-link>
+              <p class="name">{{ item.info_name }}</p></el-button
+            >
             <p class="time">
               {{ $moment(item.create_time).format("lll") }}
             </p>
@@ -202,6 +203,9 @@ export default {
   computed: {
     userInfo() {
       return JSON.parse(localStorage.getItem("userInfo")) || "";
+    },
+    token() {
+      return localStorage.getItem("token") || "";
     },
   },
   watch: {
@@ -412,6 +416,22 @@ export default {
             type: "warning",
           });
         });
+    },
+
+    //跳转个人详情
+    toPersonalDetail(u_id) {
+      if (this.token) {
+        this.$router.push({
+          path: "/personal",
+          query: { u_id: u_id },
+        });
+      } else {
+        this.$message({
+          showClose: true,
+          message: "请先登录再查看哦~",
+          type: "warning",
+        });
+      }
     },
   },
 };
